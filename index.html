@@ -32,27 +32,7 @@
       --accent: #DB2777;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --primary: #A8D5BA;
-        --accent: #D4AF37;
-        --bg: #0a0a0a;
-        --card-bg: #1a1a1a;
-        --text: #F3F4F6;
-        --text-muted: #9CA3AF;
-        --border: #4B5563;
-      }
-    }
-
-    :root[data-theme="dark"] {
-      --primary: #A8D5BA;
-      --accent: #D4AF37;
-      --bg: #0a0a0a;
-      --card-bg: #1a1a1a;
-      --text: #F3F4F6;
-      --text-muted: #9CA3AF;
-      --border: #4B5563;
-    }
+    /* 라이트 모드 고정 */
 
     * {
       box-sizing: border-box;
@@ -62,8 +42,8 @@
     body {
       margin: 0;
       padding: 0;
-      background: var(--bg);
-      color: var(--text);
+      background: #ffffff !important;
+      color: #2D3E50 !important;
       font-family: "Noto Sans CJK KR", sans-serif;
       line-height: 1.5;
       overflow-x: hidden;
