@@ -574,6 +574,13 @@
           <label style="margin-bottom: 12px;">신랑/신부만 사용</label>
           <button class="btn" style="width: 100%;" onclick="goToDashboard()">📊 대시보드 보기</button>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <label style="margin-bottom: 12px;">데이터 관리</label>
+          <button class="btn" style="width: 100%; background: var(--danger); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);" onclick="resetAllData()">🗑️ 모든 데이터 초기화</button>
+        </div>
       </div>
     </div>
   </div>
@@ -696,6 +703,24 @@
     function changeRole() {
       localStorage.removeItem("wedding-registered-role");
       localStorage.removeItem("wedding-edit-password");
+      location.reload();
+    }
+
+    function resetAllData() {
+      if (!confirm('⚠️ 모든 데이터가 삭제됩니다. 정말 초기화하시겠습니까?')) {
+        return;
+      }
+
+      if (!confirm('🗑️ 이 작업은 되돌릴 수 없습니다. 한 번 더 확인합니다.')) {
+        return;
+      }
+
+      // 모든 localStorage 데이터 삭제
+      localStorage.removeItem("wedding-registered-role");
+      localStorage.removeItem("wedding-submissions");
+      localStorage.removeItem("wedding-edit-password");
+
+      alert('✅ 모든 데이터가 삭제되었습니다.');
       location.reload();
     }
 
