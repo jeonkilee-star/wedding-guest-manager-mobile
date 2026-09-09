@@ -710,20 +710,34 @@
     }
 
     function checkPassword() {
-      const pwd = document.getElementById('passwordInput').value;
-      const storedPwd = passwords.find(p => p.id === currentSide);
+      const pwd = document.getElementById('passwordInput').value.trim();
+
+      if (!pwd || pwd.length !== 4) {
+        alert('비밀번호를 정확히 입력해주세요');
+        return;
+      }
+
+      // 저장된 비밀번호 찾기
+      let storedPwd = null;
+      for (let p of passwords) {
+        if (p.id === currentSide) {
+          storedPwd = p.password;
+          break;
+        }
+      }
 
       if (!storedPwd) {
         alert('비밀번호가 설정되지 않았습니다');
         return;
       }
 
-      if (pwd === storedPwd.password) {
+      if (pwd === String(storedPwd)) {
         document.getElementById('lockedContent').style.display = 'none';
         document.getElementById('dashboardContent').style.display = 'block';
         updateDashboard();
-      } else if (pwd.length === 4) {
+      } else {
         alert('비밀번호가 틀렸습니다');
+        document.getElementById('passwordInput').value = '';
       }
     }
 
