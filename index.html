@@ -481,6 +481,8 @@
 
         <div class="divider"></div>
 
+        <div id="syncBadge" style="font-size: 11px; font-weight: 600; text-align: center; margin-bottom: 10px; color: var(--text-muted);"></div>
+
         <!-- 전체 현황 (누구나 볼 수 있음) -->
         <div class="stats">
           <div class="stat">
@@ -541,7 +543,22 @@
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script>
+    // ===================================================================
+    // Firebase 설정 — 콘솔 > 프로젝트 설정 > 내 앱 의 값을 붙여넣으세요.
+    // 비워두면 이 기기에만 저장되고 가족끼리 공유되지 않습니다.
+    // ===================================================================
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
     const CONTRIBUTORS = {
       groom: ['신랑 (이정민)', '아버지', '어머니', '동생'],
       bride: ['신부 (김예미)', '아버지', '어머니', '언니']
@@ -550,18 +567,41 @@
     let registeredRole = null;
     let breakdownSide = 'groom';
     let submissions = [];
-    let db = null;
+    let fdb = null;
+    let unsubscribe = null;
     let count = 1;
 
-    async function init() {
-      try {
-        if (typeof claude !== 'undefined') {
-          db = await claude.use("db");
-        }
-      } catch (e) {
-        console.log("Claude DB not available, using localStorage only");
-        db = null;
+    function initFirebase() {
+      if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+        console.log("Firebase 미설정 — 이 기기에만 저장됩니다.");
+        return;
       }
+      try {
+        firebase.initializeApp(firebaseConfig);
+        fdb = firebase.firestore();
+      } catch (e) {
+        console.error("Firebase 초기화 실패:", e);
+        fdb = null;
+      }
+    }
+
+    function updateSyncBadge(state) {
+      const badge = document.getElementById('syncBadge');
+      if (!badge) return;
+      if (state === 'error') {
+        badge.textContent = '⚠️ 연결 실패 — 이 기기에만 저장됨';
+        badge.style.color = 'var(--danger)';
+      } else if (fdb) {
+        badge.textContent = '🔄 가족과 실시간 공유 중';
+        badge.style.color = 'var(--success)';
+      } else {
+        badge.textContent = '📱 이 기기에만 저장됨';
+        badge.style.color = 'var(--text-muted)';
+      }
+    }
+
+    async function init() {
+      initFirebase();
 
       const saved = localStorage.getItem("wedding-registered-role");
       if (!saved) {
@@ -669,20 +709,29 @@
       location.reload();
     }
 
-    function resetAllData() {
-      if (!confirm('⚠️ 모든 데이터가 삭제됩니다. 정말 초기화하시겠습니까?')) {
-        return;
+    async function resetAllData() {
+      const scope = fdb
+        ? '⚠️ 가족 모두가 입력한 데이터가 전부 삭제됩니다.\n다른 사람 폰에서도 사라집니다. 계속할까요?'
+        : '⚠️ 이 기기의 모든 데이터가 삭제됩니다. 계속할까요?';
+
+      if (!confirm(scope)) return;
+      if (!confirm('🗑️ 되돌릴 수 없습니다. 한 번 더 확인합니다.')) return;
+
+      if (fdb) {
+        try {
+          const snap = await fdb.collection("submissions").get();
+          const batch = fdb.batch();
+          snap.docs.forEach(d => batch.delete(d.ref));
+          await batch.commit();
+        } catch (e) {
+          console.error("서버 데이터 삭제 실패:", e);
+          alert('서버 데이터 삭제에 실패했습니다: ' + e.message);
+          return;
+        }
       }
 
-      if (!confirm('🗑️ 이 작업은 되돌릴 수 없습니다. 한 번 더 확인합니다.')) {
-        return;
-      }
-
-      // 모든 localStorage 데이터 삭제
       localStorage.removeItem("wedding-registered-role");
       localStorage.removeItem("wedding-submissions");
-      localStorage.removeItem("wedding-edit-password");
-      localStorage.removeItem("wedding-admin-password");
 
       alert('✅ 모든 데이터가 삭제되었습니다.');
       location.reload();
@@ -728,63 +777,68 @@
     }
 
     async function saveSubmission() {
-      const name = document.getElementById('nameInput').value.trim();
-      const contributor = `${registeredRole.side === 'groom' ? '신랑측' : '신부측'} ${registeredRole.role}`;
-      const submissionId = `sub_${Date.now()}`;
+      updateCountFromInput();
 
-      const submission = {
-        id: submissionId,
+      const note = document.getElementById('nameInput').value.trim();
+      const contributor = `${registeredRole.side === 'groom' ? '신랑측' : '신부측'} ${registeredRole.role}`;
+
+      const data = {
         contributor,
         count,
-        status: 'pending',
-        personalNote: name,
+        personalNote: note,
         createdAt: Date.now(),
         userSide: registeredRole.side,
         userRole: registeredRole.role
       };
 
-      if (db) {
+      if (fdb) {
         try {
-          await db.collection("wedding/submissions").set(submissionId, submission);
-          await db.collection("data/users/me/submissions").set(submissionId, submission);
+          await fdb.collection("submissions").add(data);
         } catch (e) {
-          console.error("DB save failed:", e);
-          submissions.push(submission);
-          saveToLocalStorage();
+          console.error("저장 실패:", e);
+          alert('저장에 실패했습니다: ' + e.message);
+          return;
         }
       } else {
-        submissions.push(submission);
+        submissions.push({ id: `sub_${Date.now()}`, ...data });
         saveToLocalStorage();
+        renderPersonalList();
+        renderStats();
       }
 
       document.getElementById('nameInput').value = '';
       count = 1;
-      document.getElementById('countDisplay').textContent = '1';
+      document.getElementById('countDisplay').value = '1';
       document.getElementById('nameInput').focus();
-
-      await loadSubmissions();
-      renderStats();
     }
 
     async function loadSubmissions() {
-      if (db) {
-        try {
-          const result = await db.collection("wedding/submissions").orderBy({ field: "createdAt", direction: "desc" }).get();
-          submissions = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
-
-          db.collection("wedding/submissions").onSnapshot((snapshot) => {
-            submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data }));
-            renderPersonalList();
-            renderStats();
-          });
-        } catch (e) {
-          console.log("DB not available");
-          loadFromLocalStorage();
-        }
+      if (fdb) {
+        if (unsubscribe) return;
+        unsubscribe = fdb.collection("submissions")
+          .orderBy("createdAt", "desc")
+          .onSnapshot(
+            (snapshot) => {
+              submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+              updateSyncBadge();
+              renderPersonalList();
+              renderStats();
+            },
+            (err) => {
+              console.error("Firestore 구독 실패:", err);
+              fdb = null;
+              unsubscribe = null;
+              updateSyncBadge('error');
+              loadFromLocalStorage();
+              renderPersonalList();
+              renderStats();
+            }
+          );
       } else {
         loadFromLocalStorage();
+        updateSyncBadge();
+        renderPersonalList();
       }
-      renderPersonalList();
     }
 
     function loadFromLocalStorage() {
@@ -901,21 +955,18 @@
     async function deleteSubmission(id) {
       if (!confirm('삭제하시겠습니까?')) return;
 
-      submissions = submissions.filter(s => s.id !== id);
-
-      // 항상 localStorage에 저장
-      saveToLocalStorage();
-
-      if (db) {
+      if (fdb) {
         try {
-          await db.collection("wedding/submissions").delete(id);
-          await db.collection("data/users/me/submissions").delete(id).catch(() => {});
+          await fdb.collection("submissions").doc(id).delete();
         } catch (e) {
-          console.error("Delete failed:", e);
+          console.error("삭제 실패:", e);
+          alert('삭제에 실패했습니다: ' + e.message);
         }
+        return;
       }
 
-      await loadSubmissions();
+      submissions = submissions.filter(s => s.id !== id);
+      saveToLocalStorage();
       renderPersonalList();
       renderStats();
     }
