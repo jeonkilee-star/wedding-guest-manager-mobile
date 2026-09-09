@@ -451,29 +451,6 @@
       </div>
     </div>
 
-    <!-- 비밀번호 등록/입력 화면 (신랑/신부만) -->
-    <div id="passwordPage" style="display: none;">
-      <div class="content">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 32px; text-align: center;">
-          <div style="margin-bottom: 24px;">
-            <div style="font-size: 48px; margin-bottom: 16px;">🔐</div>
-            <h2 id="passwordPageTitle" style="margin: 0; font-size: 18px; color: var(--text); margin-bottom: 8px;">비밀번호 등록</h2>
-            <p id="passwordPageDesc" style="margin: 0; color: var(--text-muted); font-size: 13px;">신랑/신부만 접근할 수 있는 비밀번호를 설정해주세요</p>
-          </div>
-
-          <div style="width: 100%; max-width: 300px; margin-bottom: 20px;">
-            <div style="margin-bottom: 16px;">
-              <label style="margin-bottom: 12px;">4자리 숫자 비밀번호</label>
-              <input type="password" id="passwordInput" placeholder="0000" maxlength="4" inputmode="numeric" style="font-size: 18px; text-align: center; letter-spacing: 8px;">
-            </div>
-          </div>
-
-          <button id="passwordConfirmBtn" onclick="submitPassword()" class="btn" style="width: 100%; max-width: 300px;">확인</button>
-          <button id="passwordBackBtn" onclick="goBackToRoleSetup()" class="btn-back" style="width: 44px; height: 44px; margin-top: 12px;">← 뒤로</button>
-        </div>
-      </div>
-    </div>
-
     <!-- 메인 앱 화면 -->
     <div id="mainApp" style="display: none;">
       <!-- 입력 페이지 -->
@@ -501,98 +478,37 @@
 
         <div class="divider"></div>
 
-        <!-- 일반 가족용 통계 -->
-        <div class="stats" id="familyStats">
-          <div class="stat" id="totalCountStat" style="cursor: pointer;" onclick="goToDashboardIfAdmin()">
+        <!-- 전체 현황 (누구나 볼 수 있음) -->
+        <div class="stats">
+          <div class="stat">
             <div class="stat-label">총 인원</div>
             <div class="stat-value" id="totalCount">0</div>
           </div>
-          <div class="stat" id="submitCountStat">
-            <div class="stat-label">제출 건수</div>
-            <div class="stat-value" id="submitCount">0</div>
-          </div>
-          <div class="stat" id="attendedCountStat">
-            <div class="stat-label">참석</div>
-            <div class="stat-value" id="attendedCount" style="color: var(--success);">0</div>
-          </div>
-          <div class="stat" id="pendingCountStat">
-            <div class="stat-label">미응답</div>
-            <div class="stat-value" id="pendingCount" style="color: var(--warning);">0</div>
-          </div>
-        </div>
-
-        <!-- 신랑/신부용 통계 -->
-        <div class="stats" id="adminStats" style="display: none;">
-          <div class="stat">
-            <div class="stat-label">총 인원</div>
-            <div class="stat-value" id="adminTotal">0</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">전체참석</div>
-            <div class="stat-value" id="adminAttended" style="color: var(--success);">0</div>
-          </div>
           <div class="stat">
             <div class="stat-label">신랑측</div>
-            <div class="stat-value" id="adminGroom">0</div>
+            <div class="stat-value" id="groomTotal">0</div>
           </div>
           <div class="stat">
             <div class="stat-label">신부측</div>
-            <div class="stat-value" id="adminBride">0</div>
+            <div class="stat-value" id="brideTotal">0</div>
           </div>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <div class="section-title">역할별 현황</div>
+          <div class="tabs">
+            <button onclick="switchBreakdownSide('groom')" id="breakdownGroomBtn" class="tab-btn active">신랑측</button>
+            <button onclick="switchBreakdownSide('bride')" id="breakdownBrideBtn" class="tab-btn">신부측</button>
+          </div>
+          <div id="roleBreakdown" style="background: var(--card-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);"></div>
+        </div>
+
+        <div class="divider"></div>
 
         <div class="section-title">내 제출 내역</div>
         <div id="personalSection"></div>
-      </div>
-
-      <!-- 신랑/신부 대시보드 -->
-      <div id="dashboardPage" style="display: none;" class="content">
-        <button class="btn-back" onclick="showInputPage()">← 뒤로</button>
-
-        <div class="section">
-          <label style="margin-bottom: 12px;">신랑/신부 비밀번호 입력</label>
-          <input type="password" id="dashboardPassword" placeholder="비밀번호" maxlength="8">
-          <button class="btn" style="width: 100%;" onclick="checkDashboardPassword()">확인</button>
-        </div>
-
-        <div id="dashboardLocked" style="text-align: center; color: var(--text-muted); padding: 40px 16px;">
-          🔒 비밀번호를 입력해주세요
-        </div>
-
-        <div id="dashboardUnlocked" style="display: none;">
-          <div class="divider"></div>
-
-          <div class="section">
-            <div class="section-title">신랑측 / 신부측</div>
-            <div class="tabs">
-              <button onclick="switchDashboardSide('groom')" id="dashGroomBtn" class="tab-btn active">신랑측</button>
-              <button onclick="switchDashboardSide('bride')" id="dashBrideBtn" class="tab-btn">신부측</button>
-            </div>
-          </div>
-
-          <div class="stats">
-            <div class="stat">
-              <div class="stat-label">총 인원</div>
-              <div class="stat-value" id="dashTotal">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">참석</div>
-              <div class="stat-value" id="dashAttended" style="color: var(--success);">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">불참</div>
-              <div class="stat-value" id="dashDeclined" style="color: var(--danger);">0</div>
-            </div>
-          </div>
-
-          <div class="section-title">역할별 현황</div>
-          <div id="roleBreakdown" style="background: var(--card-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);"></div>
-
-          <div class="divider"></div>
-
-          <div class="section-title">제출 목록</div>
-          <div id="dashboardList"></div>
-        </div>
       </div>
     </div>
 
@@ -615,13 +531,6 @@
         <div class="divider"></div>
 
         <div class="section">
-          <label style="margin-bottom: 12px;">신랑/신부만 사용</label>
-          <button class="btn" style="width: 100%;" onclick="goToDashboard()">📊 대시보드 보기</button>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="section">
           <label style="margin-bottom: 12px;">데이터 관리</label>
           <button class="btn" style="width: 100%; background: var(--danger); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);" onclick="resetAllData()">🗑️ 모든 데이터 초기화</button>
         </div>
@@ -636,8 +545,7 @@
     };
 
     let registeredRole = null;
-    let currentDashboardSide = 'groom';
-    let isEditMode = false;
+    let breakdownSide = 'groom';
     let submissions = [];
     let db = null;
     let count = 1;
@@ -659,17 +567,6 @@
       }
 
       registeredRole = JSON.parse(saved);
-
-      // 신랑/신부인 경우 비밀번호 입력 필요
-      const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
-      if (isGroomOrBride) {
-        const savedPassword = localStorage.getItem("wedding-admin-password");
-        if (savedPassword) {
-          showPasswordPage(false); // false = 입력 모드
-          return;
-        }
-      }
-
       showMainApp();
     }
 
@@ -713,111 +610,22 @@
       registeredRole = { side: setupSide, role: setupRole };
       localStorage.setItem("wedding-registered-role", JSON.stringify(registeredRole));
 
-      // 신랑/신부인 경우 비밀번호 등록 화면으로
-      const isGroomOrBride = (setupRole === '신랑 (이정민)' || setupRole === '신부 (김예미)');
-      if (isGroomOrBride) {
-        showPasswordPage(true); // true = 등록 모드
-      } else {
-        location.reload();
-      }
-    }
-
-    function showPasswordPage(isSetup) {
-      document.getElementById('setupPage').style.display = 'none';
-      document.getElementById('passwordPage').style.display = 'block';
-      document.getElementById('mainApp').style.display = 'none';
-      document.getElementById('passwordInput').value = '';
-      document.getElementById('passwordInput').focus();
-
-      if (isSetup) {
-        document.getElementById('passwordPageTitle').textContent = '비밀번호 등록';
-        document.getElementById('passwordPageDesc').textContent = '신랑/신부만 접근할 수 있는 4자리 숫자 비밀번호를 설정해주세요';
-        document.getElementById('passwordConfirmBtn').textContent = '등록하기';
-        document.getElementById('passwordBackBtn').style.display = 'block';
-      } else {
-        document.getElementById('passwordPageTitle').textContent = '비밀번호 입력';
-        document.getElementById('passwordPageDesc').textContent = '신랑/신부 비밀번호를 입력해주세요';
-        document.getElementById('passwordConfirmBtn').textContent = '입력';
-        document.getElementById('passwordBackBtn').style.display = 'none';
-      }
-    }
-
-    function submitPassword() {
-      const passwordInput = document.getElementById('passwordInput');
-      const password = passwordInput.value.trim();
-
-      console.log('Password length:', password.length);
-      console.log('Is number:', !isNaN(password) && password !== '');
-
-      if (password.length === 0) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-      }
-
-      if (password.length !== 4) {
-        alert('정확히 4자리를 입력해주세요. (현재: ' + password.length + '자)');
-        return;
-      }
-
-      if (isNaN(password)) {
-        alert('숫자만 입력해주세요.');
-        return;
-      }
-
-      const savedPassword = localStorage.getItem("wedding-admin-password");
-      console.log('Saved password exists:', !!savedPassword);
-
-      if (!savedPassword) {
-        // 비밀번호 등록 모드
-        console.log('등록 모드: 비밀번호 저장');
-        localStorage.setItem("wedding-admin-password", password);
-        alert('✅ 비밀번호가 등록되었습니다.');
-        location.reload();
-      } else {
-        // 비밀번호 입력 모드
-        console.log('입력 모드: 비밀번호 검증');
-        if (password === savedPassword) {
-          console.log('비밀번호 일치');
-          alert('✅ 비밀번호가 확인되었습니다.');
-          location.reload();
-        } else {
-          console.log('비밀번호 불일치');
-          alert('❌ 비밀번호가 맞지 않습니다.');
-          passwordInput.value = '';
-          passwordInput.focus();
-        }
-      }
-    }
-
-    function goBackToRoleSetup() {
-      document.getElementById('setupPage').style.display = 'block';
-      document.getElementById('passwordPage').style.display = 'none';
-      setupRole = null;
-      setupSide = null;
-      selectSideForSetup('groom');
+      location.reload();
     }
 
     async function showMainApp() {
       document.getElementById('setupPage').style.display = 'none';
-      document.getElementById('passwordPage').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
       document.getElementById('settingsPage').style.display = 'none';
       document.getElementById('headerActions').style.display = 'flex';
       document.getElementById('inputPage').style.display = 'block';
-      document.getElementById('dashboardPage').style.display = 'none';
 
       updateCurrentRoleDisplay();
       applyTheme();
 
-      // 신랑/신부인 경우 전용 통계 표시
-      const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
-      if (isGroomOrBride) {
-        document.getElementById('familyStats').style.display = 'none';
-        document.getElementById('adminStats').style.display = 'grid';
-      } else {
-        document.getElementById('familyStats').style.display = 'grid';
-        document.getElementById('adminStats').style.display = 'none';
-      }
+      breakdownSide = registeredRole.side;
+      document.getElementById('breakdownGroomBtn').classList.toggle('active', breakdownSide === 'groom');
+      document.getElementById('breakdownBrideBtn').classList.toggle('active', breakdownSide === 'bride');
 
       await loadSubmissions();
       renderStats();
@@ -837,12 +645,8 @@
     }
 
     function goToMainApp() {
-      document.getElementById('setupPage').style.display = 'none';
-      document.getElementById('passwordPage').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-      document.getElementById('settingsPage').style.display = 'none';
-      document.getElementById('inputPage').style.display = 'block';
-      document.getElementById('dashboardPage').style.display = 'none';
+      if (!registeredRole) return;
+      showMainApp();
     }
 
     function updateCurrentRoleDisplay() {
@@ -859,7 +663,6 @@
 
     function changeRole() {
       localStorage.removeItem("wedding-registered-role");
-      localStorage.removeItem("wedding-edit-password");
       location.reload();
     }
 
@@ -970,10 +773,6 @@
             submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data }));
             renderPersonalList();
             renderStats();
-            if (isEditMode) {
-              renderDashboardList();
-              updateDashboardStats();
-            }
           });
         } catch (e) {
           console.log("DB not available");
@@ -1040,35 +839,60 @@
       `;
     }
 
+    function getSide(s) {
+      return s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+    }
+
     function renderStats() {
       const total = submissions.reduce((sum, s) => sum + s.count, 0);
-      const attended = submissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
-      const pending = submissions.filter(s => s.status === 'pending').reduce((sum, s) => sum + s.count, 0);
+      const groomTotal = submissions.filter(s => getSide(s) === 'groom').reduce((sum, s) => sum + s.count, 0);
+      const brideTotal = submissions.filter(s => getSide(s) === 'bride').reduce((sum, s) => sum + s.count, 0);
 
       document.getElementById('totalCount').textContent = total;
-      document.getElementById('submitCount').textContent = submissions.length;
-      document.getElementById('attendedCount').textContent = attended;
-      document.getElementById('pendingCount').textContent = pending;
+      document.getElementById('groomTotal').textContent = groomTotal;
+      document.getElementById('brideTotal').textContent = brideTotal;
 
-      // 신랑/신부용 통계 계산
-      const groomTotal = submissions
-        .filter(s => {
-          const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
-          return subSide === 'groom';
-        })
-        .reduce((sum, s) => sum + s.count, 0);
+      renderRoleBreakdown();
+    }
 
-      const brideTotal = submissions
-        .filter(s => {
-          const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
-          return subSide === 'bride';
-        })
-        .reduce((sum, s) => sum + s.count, 0);
+    function switchBreakdownSide(side) {
+      breakdownSide = side;
+      document.getElementById('breakdownGroomBtn').classList.toggle('active', side === 'groom');
+      document.getElementById('breakdownBrideBtn').classList.toggle('active', side === 'bride');
+      renderRoleBreakdown();
+    }
 
-      document.getElementById('adminTotal').textContent = total;
-      document.getElementById('adminAttended').textContent = attended;
-      document.getElementById('adminGroom').textContent = groomTotal;
-      document.getElementById('adminBride').textContent = brideTotal;
+    function renderRoleBreakdown() {
+      const sideSubmissions = submissions.filter(s => getSide(s) === breakdownSide);
+
+      const counts = {};
+      sideSubmissions.forEach(s => {
+        const role = s.userRole || s.contributor.split(' ').slice(1).join(' ');
+        counts[role] = (counts[role] || 0) + s.count;
+      });
+
+      const roleOrder = CONTRIBUTORS[breakdownSide];
+      let total = 0;
+
+      let html = roleOrder.map(role => {
+        const count = counts[role] || 0;
+        total += count;
+        return `
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-weight: 600;">${role}</div>
+            <div style="font-weight: 700; color: var(--primary);">${count}명</div>
+          </div>
+        `;
+      }).join('');
+
+      html += `
+        <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 12px; border-top: 2px solid var(--primary);">
+          <div style="font-weight: 700; color: var(--primary);">총 합계</div>
+          <div style="font-weight: 700; color: var(--primary); font-size: 16px;">${total}명</div>
+        </div>
+      `;
+
+      document.getElementById('roleBreakdown').innerHTML = html;
     }
 
     async function deleteSubmission(id) {
@@ -1093,201 +917,13 @@
       renderStats();
     }
 
-    function goToDashboardIfAdmin() {
-      if (registeredRole.role !== '신랑' && registeredRole.role !== '신부') {
-        return; // 신랑/신부가 아니면 아무것도 하지 않음
-      }
-      goToDashboard();
-    }
-
-    function goToDashboard() {
-      if (registeredRole.role !== '신랑' && registeredRole.role !== '신부') {
-        alert('신랑 또는 신부만 대시보드에 접근할 수 있습니다.');
-        return;
-      }
-
-      document.getElementById('inputPage').style.display = 'none';
-      document.getElementById('dashboardPage').style.display = 'block';
-      isEditMode = false;
-      document.getElementById('dashboardPassword').value = '';
-      document.getElementById('dashboardPassword').focus();
-    }
-
-    function showInputPage() {
-      document.getElementById('inputPage').style.display = 'block';
-      document.getElementById('dashboardPage').style.display = 'none';
-      isEditMode = false;
-    }
-
-    function checkDashboardPassword() {
-      const password = document.getElementById('dashboardPassword').value;
-      const savedPassword = localStorage.getItem("wedding-edit-password");
-
-      if (!savedPassword) {
-        if (password.length >= 4) {
-          localStorage.setItem("wedding-edit-password", password);
-          unlockDashboard();
-        } else {
-          alert('최소 4자 이상의 비밀번호를 설정해주세요.');
-        }
-        return;
-      }
-
-      if (password === savedPassword) {
-        unlockDashboard();
-      } else {
-        alert('비밀번호가 맞지 않습니다.');
-      }
-    }
-
-    function unlockDashboard() {
-      isEditMode = true;
-      document.getElementById('dashboardLocked').style.display = 'none';
-      document.getElementById('dashboardUnlocked').style.display = 'block';
-      switchDashboardSide('groom');
-    }
-
-    function switchDashboardSide(side) {
-      currentDashboardSide = side;
-      document.getElementById('dashGroomBtn').classList.toggle('active', side === 'groom');
-      document.getElementById('dashBrideBtn').classList.toggle('active', side === 'bride');
-      renderDashboardList();
-      updateDashboardStats();
-    }
-
-    function renderDashboardList() {
-      const dashboardList = document.getElementById('dashboardList');
-      const sideSubmissions = submissions.filter(s => {
-        const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
-        return subSide === currentDashboardSide;
-      });
-
-      if (sideSubmissions.length === 0) {
-        dashboardList.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📋</div>
-            <div>아직 입력한 내용이 없습니다</div>
-          </div>
-        `;
-        return;
-      }
-
-      dashboardList.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>작성자</th>
-              <th>인원</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${sideSubmissions.map(s => `
-              <tr>
-                <td>${s.contributor}</td>
-                <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function updateDashboardStats() {
-      const sideSubmissions = submissions.filter(s => {
-        const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
-        return subSide === currentDashboardSide;
-      });
-
-      const total = sideSubmissions.reduce((sum, s) => sum + s.count, 0);
-      const attended = sideSubmissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
-      const declined = sideSubmissions.filter(s => s.status === 'declined').reduce((sum, s) => sum + s.count, 0);
-
-      document.getElementById('dashTotal').textContent = total;
-      document.getElementById('dashAttended').textContent = attended;
-      document.getElementById('dashDeclined').textContent = declined;
-
-      // 역할별 현황 업데이트
-      updateRoleBreakdown(sideSubmissions);
-    }
-
-    function updateRoleBreakdown(sideSubmissions) {
-      const roleBreakdown = {};
-
-      // 역할별 인원 계산
-      sideSubmissions.forEach(s => {
-        const roleLabel = s.userRole || s.contributor.split(' ')[1];
-        if (!roleBreakdown[roleLabel]) {
-          roleBreakdown[roleLabel] = 0;
-        }
-        roleBreakdown[roleLabel] += s.count;
-      });
-
-      // 역할 순서 정의
-      const roleOrder = currentDashboardSide === 'groom'
-        ? ['신랑', '아버지', '어머니', '동생']
-        : ['신부', '아버지', '어머니', '언니'];
-
-      // HTML 생성
-      let html = '';
-      let totalCount = 0;
-
-      roleOrder.forEach(role => {
-        const count = roleBreakdown[role] || 0;
-        totalCount += count;
-        html += `
-          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-weight: 600; color: var(--text);">${role}</div>
-            <div style="font-weight: 700; color: var(--primary);">${count}명</div>
-          </div>
-        `;
-      });
-
-      // 총합 추가
-      html += `
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; margin-top: 8px; padding-top: 12px; border-top: 2px solid var(--primary);">
-          <div style="font-weight: 700; color: var(--primary);">총 합계</div>
-          <div style="font-weight: 700; color: var(--primary); font-size: 16px;">${totalCount}명</div>
-        </div>
-      `;
-
-      document.getElementById('roleBreakdown').innerHTML = html;
-    }
-
-    async function updateStatus(id, status) {
-      const submission = submissions.find(s => s.id === id);
-      if (!submission) return;
-
-      submission.status = status;
-
-      if (db) {
-        try {
-          await db.collection("wedding/submissions").update(id, { status });
-        } catch (e) {
-          console.error("Update failed:", e);
-        }
-      } else {
-        saveToLocalStorage();
-        renderDashboardList();
-        updateDashboardStats();
-      }
-    }
-
     init();
 
-    // 요소가 존재할 때만 이벤트 리스너 추가
     document.addEventListener('DOMContentLoaded', () => {
       const nameInput = document.getElementById('nameInput');
-      const dashPassword = document.getElementById('dashboardPassword');
-
       if (nameInput) {
         nameInput.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') saveSubmission();
-        });
-      }
-
-      if (dashPassword) {
-        dashPassword.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') checkDashboardPassword();
         });
       }
     });
