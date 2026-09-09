@@ -415,7 +415,7 @@
 <body>
   <div class="app">
     <div class="header">
-      <h1>💍 결혼식 하객 관리</h1>
+      <h1 style="cursor: pointer;" onclick="goToMainApp()" title="메인화면으로 돌아가기">💍 결혼식 하객 관리</h1>
       <div class="header-actions" id="headerActions" style="display: none;">
         <button class="header-btn" onclick="showSettings()" title="역할 변경">⚙️</button>
       </div>
@@ -743,26 +743,48 @@
     }
 
     function submitPassword() {
-      const password = document.getElementById('passwordInput').value;
+      const passwordInput = document.getElementById('passwordInput');
+      const password = passwordInput.value.trim();
 
-      if (password.length !== 4 || isNaN(password)) {
-        alert('4자리 숫자 비밀번호를 입력해주세요.');
+      console.log('Password length:', password.length);
+      console.log('Is number:', !isNaN(password) && password !== '');
+
+      if (password.length === 0) {
+        alert('비밀번호를 입력해주세요.');
+        return;
+      }
+
+      if (password.length !== 4) {
+        alert('정확히 4자리를 입력해주세요. (현재: ' + password.length + '자)');
+        return;
+      }
+
+      if (isNaN(password)) {
+        alert('숫자만 입력해주세요.');
         return;
       }
 
       const savedPassword = localStorage.getItem("wedding-admin-password");
+      console.log('Saved password exists:', !!savedPassword);
 
       if (!savedPassword) {
         // 비밀번호 등록 모드
+        console.log('등록 모드: 비밀번호 저장');
         localStorage.setItem("wedding-admin-password", password);
+        alert('✅ 비밀번호가 등록되었습니다.');
         location.reload();
       } else {
         // 비밀번호 입력 모드
+        console.log('입력 모드: 비밀번호 검증');
         if (password === savedPassword) {
+          console.log('비밀번호 일치');
+          alert('✅ 비밀번호가 확인되었습니다.');
           location.reload();
         } else {
-          alert('비밀번호가 맞지 않습니다.');
-          document.getElementById('passwordInput').value = '';
+          console.log('비밀번호 불일치');
+          alert('❌ 비밀번호가 맞지 않습니다.');
+          passwordInput.value = '';
+          passwordInput.focus();
         }
       }
     }
@@ -812,6 +834,15 @@
 
     function hideSettings() {
       showMainApp();
+    }
+
+    function goToMainApp() {
+      document.getElementById('setupPage').style.display = 'none';
+      document.getElementById('passwordPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('settingsPage').style.display = 'none';
+      document.getElementById('inputPage').style.display = 'block';
+      document.getElementById('dashboardPage').style.display = 'none';
     }
 
     function updateCurrentRoleDisplay() {
