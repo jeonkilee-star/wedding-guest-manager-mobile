@@ -857,6 +857,9 @@
 
       submissions = submissions.filter(s => s.id !== id);
 
+      // 항상 localStorage에 저장
+      saveToLocalStorage();
+
       if (db) {
         try {
           await db.collection("wedding/submissions").delete(id);
@@ -864,11 +867,11 @@
         } catch (e) {
           console.error("Delete failed:", e);
         }
-      } else {
-        saveToLocalStorage();
       }
 
       await loadSubmissions();
+      renderPersonalList();
+      renderStats();
     }
 
     function goToDashboardIfAdmin() {
