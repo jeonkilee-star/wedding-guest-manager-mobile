@@ -624,27 +624,27 @@
     }
 
     async function loadPasswords() {
-      // 먼저 로컬 스토리지에서 로드
+      // 로컬 스토리지에서 로드
       const saved = localStorage.getItem("wedding-passwords");
       if (saved) {
         try {
-          passwords = JSON.parse(saved);
+          const data = JSON.parse(saved);
+          if (typeof data === 'object' && !Array.isArray(data)) {
+            // 객체 형식인 경우 배열로 변환
+            passwords = Object.entries(data).map(([id, password]) => ({ id, password }));
+          } else if (Array.isArray(data)) {
+            passwords = data;
+          } else {
+            passwords = [];
+          }
+          console.log('localStorage에서 로드된 비밀번호:', passwords);
           return;
-        } catch (e) {}
+        } catch (e) {
+          console.error('localStorage 파싱 에러:', e);
+        }
       }
 
-      // db에서 로드
-      if (db) {
-        try {
-          const result = await db.collection("wedding/passwords").get();
-          passwords = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
-          localStorage.setItem("wedding-passwords", JSON.stringify(passwords));
-        } catch (e) {
-          passwords = [];
-        }
-      } else {
-        passwords = [];
-      }
+      passwords = [];
     }
 
     function savePasswordLocal() {
@@ -672,9 +672,11 @@
       }
     }
 
-    async function setPassword() {
-      const pwd1 = document.getElementById('newPasswordInput').value;
-      const pwd2 = document.getElementById('newPasswordConfirm').value;
+    function setPassword() {
+      const pwd1 = document.getElementById('newPasswordInput').value.trim();
+      const pwd2 = document.getElementById('newPasswordConfirm').value.trim();
+
+      console.log('비밀번호 설정 시도:', pwd1, pwd2);
 
       if (!pwd1 || !pwd2) {
         alert('비밀번호를 입력해주세요');
@@ -687,26 +689,45 @@
       }
 
       if (pwd1 !== pwd2) {
-        alert('비밀번호가 일치하지 않습니다');
+        alert('두 비밀번호가 일치하지 않습니다');
         return;
       }
 
-      // 기존 항목 삭제 후 추가
-      passwords = passwords.filter(p => p.id !== currentSide);
-      passwords.push({ id: currentSide, password: pwd1 });
+      // 로컬스토리지에 저장
+      const passwordData = {};
+      const saved = localStorage.getItem("wedding-passwords");
+      if (saved) {
+        try {
+          const existing = JSON.parse(saved);
+          if (Array.isArray(existing)) {
+            existing.forEach(p => {
+              passwordData[p.id] = p.password;
+            });
+          } else {
+            Object.assign(passwordData, existing);
+          }
+        } catch (e) {}
+      }
 
-      savePasswordLocal();
+      passwordData[currentSide] = pwd1;
+      localStorage.setItem("wedding-passwords", JSON.stringify(passwordData));
 
+      // 메모리의 passwords 배열 업데이트
+      passwords = Object.entries(passwordData).map(([id, password]) => ({ id, password }));
+
+      console.log('저장된 비밀번호들:', passwords);
+
+      // db에도 저장 시도
       if (db) {
         try {
-          await db.collection("wedding/passwords").set(currentSide, { password: pwd1 });
+          db.collection("wedding/passwords").set(currentSide, { password: pwd1 });
         } catch (e) {
           console.error("DB save failed:", e);
         }
       }
 
-      showPasswordScreen();
       alert('비밀번호가 설정되었습니다');
+      showPasswordScreen();
     }
 
     function checkPassword() {
