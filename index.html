@@ -479,7 +479,7 @@
         <div class="divider"></div>
 
         <div class="stats">
-          <div class="stat">
+          <div class="stat" id="totalCountStat" style="cursor: pointer;" onclick="goToDashboardIfAdmin()">
             <div class="stat-label">총 인원</div>
             <div class="stat-value" id="totalCount">0</div>
           </div>
@@ -540,6 +540,11 @@
               <div class="stat-value" id="dashDeclined" style="color: var(--danger);">0</div>
             </div>
           </div>
+
+          <div class="section-title">역할별 현황</div>
+          <div id="roleBreakdown" style="background: var(--card-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);"></div>
+
+          <div class="divider"></div>
 
           <div class="section-title">제출 목록</div>
           <div id="dashboardList"></div>
@@ -866,6 +871,13 @@
       await loadSubmissions();
     }
 
+    function goToDashboardIfAdmin() {
+      if (registeredRole.role !== '신랑' && registeredRole.role !== '신부') {
+        return; // 신랑/신부가 아니면 아무것도 하지 않음
+      }
+      goToDashboard();
+    }
+
     function goToDashboard() {
       if (registeredRole.role !== '신랑' && registeredRole.role !== '신부') {
         alert('신랑 또는 신부만 대시보드에 접근할 수 있습니다.');
@@ -979,6 +991,52 @@
       document.getElementById('dashTotal').textContent = total;
       document.getElementById('dashAttended').textContent = attended;
       document.getElementById('dashDeclined').textContent = declined;
+
+      // 역할별 현황 업데이트
+      updateRoleBreakdown(sideSubmissions);
+    }
+
+    function updateRoleBreakdown(sideSubmissions) {
+      const roleBreakdown = {};
+
+      // 역할별 인원 계산
+      sideSubmissions.forEach(s => {
+        const roleLabel = s.userRole || s.contributor.split(' ')[1];
+        if (!roleBreakdown[roleLabel]) {
+          roleBreakdown[roleLabel] = 0;
+        }
+        roleBreakdown[roleLabel] += s.count;
+      });
+
+      // 역할 순서 정의
+      const roleOrder = currentDashboardSide === 'groom'
+        ? ['신랑', '아버지', '어머니', '동생']
+        : ['신부', '아버지', '어머니', '언니'];
+
+      // HTML 생성
+      let html = '';
+      let totalCount = 0;
+
+      roleOrder.forEach(role => {
+        const count = roleBreakdown[role] || 0;
+        totalCount += count;
+        html += `
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-weight: 600; color: var(--text);">${role}</div>
+            <div style="font-weight: 700; color: var(--primary);">${count}명</div>
+          </div>
+        `;
+      });
+
+      // 총합 추가
+      html += `
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; margin-top: 8px; padding-top: 12px; border-top: 2px solid var(--primary);">
+          <div style="font-weight: 700; color: var(--primary);">총 합계</div>
+          <div style="font-weight: 700; color: var(--primary); font-size: 16px;">${totalCount}명</div>
+        </div>
+      `;
+
+      document.getElementById('roleBreakdown').innerHTML = html;
     }
 
     async function updateStatus(id, status) {
