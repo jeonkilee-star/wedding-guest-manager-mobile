@@ -591,7 +591,14 @@
     let count = 1;
 
     async function init() {
-      db = await claude.use("db");
+      try {
+        if (typeof claude !== 'undefined') {
+          db = await claude.use("db");
+        }
+      } catch (e) {
+        console.log("Claude DB not available, using localStorage only");
+        db = null;
+      }
 
       const saved = localStorage.getItem("wedding-registered-role");
       if (!saved) {
