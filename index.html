@@ -775,7 +775,7 @@
       selectSideForSetup('groom');
     }
 
-    function showMainApp() {
+    async function showMainApp() {
       document.getElementById('setupPage').style.display = 'none';
       document.getElementById('passwordPage').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
@@ -786,8 +786,6 @@
 
       updateCurrentRoleDisplay();
       applyTheme();
-      loadSubmissions();
-      renderStats();
 
       // 신랑/신부인 경우 전용 통계 표시
       const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
@@ -798,6 +796,9 @@
         document.getElementById('familyStats').style.display = 'grid';
         document.getElementById('adminStats').style.display = 'none';
       }
+
+      await loadSubmissions();
+      renderStats();
     }
 
     function showSettings() {
