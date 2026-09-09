@@ -472,12 +472,12 @@
           <label>인원수</label>
           <div class="count-control">
             <button class="count-btn" onclick="decreaseCount()">−</button>
-            <input type="number" id="countDisplay" value="1" min="1" max="9999" style="flex: 1; text-align: center; font-size: 20px; font-weight: 700; color: var(--primary); border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg);" onchange="updateCountFromInput()" onkeypress="handleCountKeypress(event)">
+            <input type="number" id="countDisplay" value="1" min="1" max="9999" inputmode="numeric" style="flex: 1; text-align: center; font-size: 20px; font-weight: 700; color: var(--primary); border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg);" onfocus="this.select()" onchange="updateCountFromInput()" onkeypress="handleCountKeypress(event)">
             <button class="count-btn" onclick="increaseCount()">+</button>
           </div>
         </div>
 
-        <button class="btn" style="width: 100%;" onclick="saveSubmission()">추가하기</button>
+        <button class="btn" id="saveBtn" style="width: 100%;" onclick="saveSubmission()">추가하기</button>
 
         <div class="divider"></div>
 
@@ -772,40 +772,57 @@
       }
     }
 
+    let saving = false;
+
     async function saveSubmission() {
+      if (saving) return;
+
       updateCountFromInput();
 
-      const note = document.getElementById('nameInput').value.trim();
-      const contributor = `${registeredRole.side === 'groom' ? '신랑측' : '신부측'} ${registeredRole.role}`;
-
-      const data = {
-        contributor,
-        count,
-        personalNote: note,
-        createdAt: Date.now(),
-        userSide: registeredRole.side,
-        userRole: registeredRole.role
-      };
-
-      if (fdb) {
-        try {
-          await fdb.collection("submissions").add(data);
-        } catch (e) {
-          console.error("저장 실패:", e);
-          alert('저장에 실패했습니다: ' + e.message);
-          return;
-        }
-      } else {
-        submissions.push({ id: `sub_${Date.now()}`, ...data });
-        saveToLocalStorage();
-        renderPersonalList();
-        renderStats();
+      if (count >= 100 && !confirm(`${count}명이 맞습니까?\n\n한 번에 입력하는 인원치고 큰 숫자입니다.`)) {
+        return;
       }
 
-      document.getElementById('nameInput').value = '';
-      count = 1;
-      document.getElementById('countDisplay').value = '1';
-      document.getElementById('nameInput').focus();
+      const btn = document.getElementById('saveBtn');
+      saving = true;
+      btn.disabled = true;
+
+      try {
+        const note = document.getElementById('nameInput').value.trim();
+        const contributor = `${registeredRole.side === 'groom' ? '신랑측' : '신부측'} ${registeredRole.role}`;
+
+        const data = {
+          contributor,
+          count,
+          personalNote: note,
+          createdAt: Date.now(),
+          userSide: registeredRole.side,
+          userRole: registeredRole.role
+        };
+
+        if (fdb) {
+          try {
+            await fdb.collection("submissions").add(data);
+          } catch (e) {
+            console.error("저장 실패:", e);
+            alert('저장에 실패했습니다: ' + e.message);
+            return;
+          }
+        } else {
+          submissions.push({ id: `sub_${Date.now()}`, ...data });
+          saveToLocalStorage();
+          renderPersonalList();
+          renderStats();
+        }
+
+        document.getElementById('nameInput').value = '';
+        count = 1;
+        document.getElementById('countDisplay').value = '1';
+        document.getElementById('nameInput').focus();
+      } finally {
+        saving = false;
+        btn.disabled = false;
+      }
     }
 
     async function loadSubmissions() {
@@ -880,10 +897,10 @@
           <tbody>
             ${mySubmissions.map(s => `
               <tr>
-                <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
-                <td style="font-size: 12px; color: var(--text-muted);">${s.personalNote || '—'}</td>
+                <td style="font-weight: 700; font-size: 14px;">${Number(s.count) || 0}명</td>
+                <td style="font-size: 12px; color: var(--text-muted);">${esc(s.personalNote) || '—'}</td>
                 <td>
-                  <button class="delete-btn" onclick="deleteSubmission('${s.id}')">삭제</button>
+                  <button class="delete-btn" onclick="deleteSubmission('${esc(s.id)}')">삭제</button>
                 </td>
               </tr>
             `).join('')}
@@ -892,8 +909,14 @@
       `;
     }
 
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[c]);
+    }
+
     function getSide(s) {
-      return s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+      return s.userSide || (String(s.contributor || '').includes('신랑측') ? 'groom' : 'bride');
     }
 
     function renderStats() {
@@ -924,7 +947,9 @@
         counts[role] = (counts[role] || 0) + s.count;
       });
 
-      const roleOrder = CONTRIBUTORS[breakdownSide];
+      const roleOrder = CONTRIBUTORS[breakdownSide].slice();
+      Object.keys(counts).forEach(r => { if (!roleOrder.includes(r)) roleOrder.push(r); });
+
       let total = 0;
 
       let html = roleOrder.map(role => {
@@ -932,7 +957,7 @@
         total += count;
         return `
           <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-weight: 600;">${role}</div>
+            <div style="font-weight: 600;">${esc(role)}</div>
             <div style="font-weight: 700; color: var(--primary);">${count}명</div>
           </div>
         `;
