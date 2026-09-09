@@ -451,6 +451,29 @@
       </div>
     </div>
 
+    <!-- 비밀번호 등록/입력 화면 (신랑/신부만) -->
+    <div id="passwordPage" style="display: none;">
+      <div class="content">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 32px; text-align: center;">
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 48px; margin-bottom: 16px;">🔐</div>
+            <h2 id="passwordPageTitle" style="margin: 0; font-size: 18px; color: var(--text); margin-bottom: 8px;">비밀번호 등록</h2>
+            <p id="passwordPageDesc" style="margin: 0; color: var(--text-muted); font-size: 13px;">신랑/신부만 접근할 수 있는 비밀번호를 설정해주세요</p>
+          </div>
+
+          <div style="width: 100%; max-width: 300px; margin-bottom: 20px;">
+            <div style="margin-bottom: 16px;">
+              <label style="margin-bottom: 12px;">4자리 숫자 비밀번호</label>
+              <input type="password" id="passwordInput" placeholder="0000" maxlength="4" inputmode="numeric" style="font-size: 18px; text-align: center; letter-spacing: 8px;">
+            </div>
+          </div>
+
+          <button id="passwordConfirmBtn" onclick="submitPassword()" class="btn" style="width: 100%; max-width: 300px;">확인</button>
+          <button id="passwordBackBtn" onclick="goBackToRoleSetup()" class="btn-back" style="width: 44px; height: 44px; margin-top: 12px;">← 뒤로</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 메인 앱 화면 -->
     <div id="mainApp" style="display: none;">
       <!-- 입력 페이지 -->
@@ -478,20 +501,20 @@
 
         <div class="divider"></div>
 
-        <div class="stats">
+        <div class="stats" id="mainStats">
           <div class="stat" id="totalCountStat" style="cursor: pointer;" onclick="goToDashboardIfAdmin()">
             <div class="stat-label">총 인원</div>
             <div class="stat-value" id="totalCount">0</div>
           </div>
-          <div class="stat">
+          <div class="stat" id="submitCountStat">
             <div class="stat-label">제출 건수</div>
             <div class="stat-value" id="submitCount">0</div>
           </div>
-          <div class="stat">
+          <div class="stat" id="attendedCountStat">
             <div class="stat-label">참석</div>
             <div class="stat-value" id="attendedCount" style="color: var(--success);">0</div>
           </div>
-          <div class="stat">
+          <div class="stat" id="pendingCountStat">
             <div class="stat-label">미응답</div>
             <div class="stat-value" id="pendingCount" style="color: var(--warning);">0</div>
           </div>
@@ -615,6 +638,17 @@
       }
 
       registeredRole = JSON.parse(saved);
+
+      // 신랑/신부인 경우 비밀번호 입력 필요
+      const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
+      if (isGroomOrBride) {
+        const savedPassword = localStorage.getItem("wedding-admin-password");
+        if (savedPassword) {
+          showPasswordPage(false); // false = 입력 모드
+          return;
+        }
+      }
+
       showMainApp();
     }
 
@@ -658,11 +692,71 @@
       registeredRole = { side: setupSide, role: setupRole };
       localStorage.setItem("wedding-registered-role", JSON.stringify(registeredRole));
 
-      location.reload();
+      // 신랑/신부인 경우 비밀번호 등록 화면으로
+      const isGroomOrBride = (setupRole === '신랑 (이정민)' || setupRole === '신부 (김예미)');
+      if (isGroomOrBride) {
+        showPasswordPage(true); // true = 등록 모드
+      } else {
+        location.reload();
+      }
+    }
+
+    function showPasswordPage(isSetup) {
+      document.getElementById('setupPage').style.display = 'none';
+      document.getElementById('passwordPage').style.display = 'block';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('passwordInput').focus();
+
+      if (isSetup) {
+        document.getElementById('passwordPageTitle').textContent = '비밀번호 등록';
+        document.getElementById('passwordPageDesc').textContent = '신랑/신부만 접근할 수 있는 4자리 숫자 비밀번호를 설정해주세요';
+        document.getElementById('passwordConfirmBtn').textContent = '등록하기';
+        document.getElementById('passwordBackBtn').style.display = 'block';
+      } else {
+        document.getElementById('passwordPageTitle').textContent = '비밀번호 입력';
+        document.getElementById('passwordPageDesc').textContent = '신랑/신부 비밀번호를 입력해주세요';
+        document.getElementById('passwordConfirmBtn').textContent = '입력';
+        document.getElementById('passwordBackBtn').style.display = 'none';
+      }
+    }
+
+    function submitPassword() {
+      const password = document.getElementById('passwordInput').value;
+
+      if (password.length !== 4 || isNaN(password)) {
+        alert('4자리 숫자 비밀번호를 입력해주세요.');
+        return;
+      }
+
+      const savedPassword = localStorage.getItem("wedding-admin-password");
+
+      if (!savedPassword) {
+        // 비밀번호 등록 모드
+        localStorage.setItem("wedding-admin-password", password);
+        location.reload();
+      } else {
+        // 비밀번호 입력 모드
+        if (password === savedPassword) {
+          location.reload();
+        } else {
+          alert('비밀번호가 맞지 않습니다.');
+          document.getElementById('passwordInput').value = '';
+        }
+      }
+    }
+
+    function goBackToRoleSetup() {
+      document.getElementById('setupPage').style.display = 'block';
+      document.getElementById('passwordPage').style.display = 'none';
+      setupRole = null;
+      setupSide = null;
+      selectSideForSetup('groom');
     }
 
     function showMainApp() {
       document.getElementById('setupPage').style.display = 'none';
+      document.getElementById('passwordPage').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
       document.getElementById('settingsPage').style.display = 'none';
       document.getElementById('headerActions').style.display = 'flex';
@@ -673,6 +767,14 @@
       applyTheme();
       loadSubmissions();
       renderStats();
+
+      // 신랑/신부인 경우 "총 인원"만 표시
+      const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
+      if (isGroomOrBride) {
+        document.getElementById('submitCountStat').style.display = 'none';
+        document.getElementById('attendedCountStat').style.display = 'none';
+        document.getElementById('pendingCountStat').style.display = 'none';
+      }
     }
 
     function showSettings() {
@@ -719,6 +821,7 @@
       localStorage.removeItem("wedding-registered-role");
       localStorage.removeItem("wedding-submissions");
       localStorage.removeItem("wedding-edit-password");
+      localStorage.removeItem("wedding-admin-password");
 
       alert('✅ 모든 데이터가 삭제되었습니다.');
       location.reload();
