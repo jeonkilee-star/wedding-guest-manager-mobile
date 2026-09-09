@@ -444,21 +444,21 @@
 
           <div class="stats">
             <div class="stat">
-              <div class="stat-label">우리 측 총 인원</div>
+              <div class="stat-label" id="ourSideLabel">신랑측 총 인원</div>
               <div class="stat-value" id="ourTotal">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">상대방 총 인원</div>
+              <div class="stat-label" id="theirSideLabel">신부측 총 인원</div>
               <div class="stat-value" id="theirTotal">0</div>
             </div>
           </div>
 
-          <div class="section-title">우리 측 세부 정보</div>
+          <div class="section-title" id="ourSideDetailLabel">신랑측 세부 정보</div>
           <div id="detailList"></div>
 
           <div class="divider"></div>
 
-          <div class="section-title">상대방 (총 인원만 표시)</div>
+          <div class="section-title" id="theirSideDisplayLabel">신부측 (총 인원만 표시)</div>
           <div class="stat">
             <div class="stat-label">총 인원</div>
             <div class="stat-value" id="theirTotalDisplay">0</div>
@@ -775,11 +775,19 @@
       const ourSide = currentSide;
       const theirSide = currentSide === 'groom' ? 'bride' : 'groom';
 
+      const ourSideLabel = ourSide === 'groom' ? '신랑측' : '신부측';
+      const theirSideLabel = theirSide === 'groom' ? '신랑측' : '신부측';
+
       const ourSubmissions = submissions.filter(s => s.side === ourSide);
       const theirSubmissions = submissions.filter(s => s.side === theirSide);
 
       const ourTotal = ourSubmissions.reduce((sum, s) => sum + s.count, 0);
       const theirTotal = theirSubmissions.reduce((sum, s) => sum + s.count, 0);
+
+      document.getElementById('ourSideLabel').textContent = ourSideLabel + ' 총 인원';
+      document.getElementById('theirSideLabel').textContent = theirSideLabel + ' 총 인원';
+      document.getElementById('ourSideDetailLabel').textContent = ourSideLabel + ' 세부 정보';
+      document.getElementById('theirSideDisplayLabel').textContent = theirSideLabel + ' (총 인원만 표시)';
 
       document.getElementById('ourTotal').textContent = ourTotal;
       document.getElementById('theirTotal').textContent = theirTotal;
