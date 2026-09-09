@@ -532,13 +532,6 @@
         <div class="section">
           <button class="btn" style="width: 100%; background: var(--danger); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);" onclick="changeRole()">역할 변경</button>
         </div>
-
-        <div class="divider"></div>
-
-        <div class="section">
-          <label style="margin-bottom: 12px;">데이터 관리</label>
-          <button class="btn" style="width: 100%; background: var(--danger); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);" onclick="resetAllData()">🗑️ 모든 데이터 초기화</button>
-        </div>
       </div>
     </div>
   </div>
@@ -702,34 +695,6 @@
 
     function changeRole() {
       localStorage.removeItem("wedding-registered-role");
-      location.reload();
-    }
-
-    async function resetAllData() {
-      const scope = fdb
-        ? '⚠️ 가족 모두가 입력한 데이터가 전부 삭제됩니다.\n다른 사람 폰에서도 사라집니다. 계속할까요?'
-        : '⚠️ 이 기기의 모든 데이터가 삭제됩니다. 계속할까요?';
-
-      if (!confirm(scope)) return;
-      if (!confirm('🗑️ 되돌릴 수 없습니다. 한 번 더 확인합니다.')) return;
-
-      if (fdb) {
-        try {
-          const snap = await fdb.collection("submissions").get();
-          const batch = fdb.batch();
-          snap.docs.forEach(d => batch.delete(d.ref));
-          await batch.commit();
-        } catch (e) {
-          console.error("서버 데이터 삭제 실패:", e);
-          alert('서버 데이터 삭제에 실패했습니다: ' + e.message);
-          return;
-        }
-      }
-
-      localStorage.removeItem("wedding-registered-role");
-      localStorage.removeItem("wedding-submissions");
-
-      alert('✅ 모든 데이터가 삭제되었습니다.');
       location.reload();
     }
 
