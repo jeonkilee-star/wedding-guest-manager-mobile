@@ -123,14 +123,17 @@
     }
 
     .btn {
-      padding: 16px;
+      padding: 16px 32px;
       border: none;
-      border-radius: 20px;
+      border-radius: 24px;
       font-weight: 700;
       font-size: 16px;
       cursor: pointer;
       transition: all 0.2s;
       letter-spacing: 0.3px;
+      max-width: 280px;
+      margin: 0 auto;
+      display: block;
     }
 
     .btn-role {
@@ -161,6 +164,26 @@
       border: 1px solid var(--border);
       margin-bottom: 16px;
       width: 100%;
+      max-width: 100%;
+    }
+
+    .btn-small {
+      padding: 6px 10px;
+      font-size: 11px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      max-width: none;
+      margin: 0;
+      display: inline;
+    }
+
+    .btn-small:active {
+      background: var(--danger);
+      color: white;
     }
 
     .form-group {
