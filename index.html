@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#1B5E45">
   <title>결혼식 하객 관리</title>
-  <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22결혼식%20하객%20관리%22,%22short_name%22:%22하객관리%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20192%20192%27%3E%3Crect%20fill=%27%232D3E50%27%20width=%27192%27%20height=%27192%27/%3E%3Ctext%20x=%2796%27%20y=%27140%27%20font-size=%27120%27%20fill=%27%23fff%27%20text-anchor=%27middle%27%3E💍%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}],%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23fff%22,%22theme_color%22:%22%232D3E50%22}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+CJK+KR:wght@400;500;700&display=swap">
   <style>
     :root {
@@ -84,43 +82,15 @@
       letter-spacing: 1px;
     }
 
-    .tabs {
-      display: flex;
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 0 8px;
-      gap: 4px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
     .content {
       flex: 1;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
+      padding: 16px;
+      padding-bottom: var(--safe-bottom);
     }
 
-    .input-section {
-      background: var(--card-bg);
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
+    .section {
+      margin-bottom: 20px;
     }
 
     .section-title {
@@ -129,55 +99,70 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin: 0 0 12px;
+      margin-bottom: 12px;
     }
 
-    .contributor-buttons {
+    .button-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 16px;
     }
 
-    .contributor-btn {
-      padding: 12px;
-      border: 2px solid var(--border);
+    .btn {
+      padding: 14px;
+      border: none;
       border-radius: 8px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 13px;
       font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .contributor-btn.active {
-      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
-      color: white;
-      border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.25);
+    .btn-role {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 2px solid var(--border);
     }
 
-    .contributor-btn:active {
+    .btn-role:active {
       transform: scale(0.95);
+      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.2);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+      box-shadow: 0 6px 16px rgba(27, 94, 69, 0.3);
+    }
+
+    .btn-back {
+      background: var(--card-bg);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      width: 100%;
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text);
       text-transform: uppercase;
       letter-spacing: 0.3px;
       margin-bottom: 6px;
     }
 
-    input[type="text"],
-    input[type="number"] {
+    input {
       width: 100%;
       padding: 12px;
       border: 1px solid var(--border);
@@ -185,14 +170,13 @@
       font-family: inherit;
       font-size: 16px;
       color: var(--text);
-      background: var(--bg);
+      background: var(--card-bg);
     }
 
-    input[type="text"]:focus,
-    input[type="number"]:focus {
+    input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
     }
 
     .count-control {
@@ -206,7 +190,7 @@
       height: 44px;
       border: 1px solid var(--border);
       border-radius: 6px;
-      background: var(--bg);
+      background: var(--card-bg);
       color: var(--text);
       font-size: 18px;
       font-weight: 600;
@@ -214,10 +198,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .count-btn:active {
-      transform: scale(0.9);
     }
 
     .count-display {
@@ -228,45 +208,72 @@
       color: var(--primary);
     }
 
-    .save-btn {
-      padding: 14px;
-      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
-      color: white;
-      border: none;
+    .list-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.2);
-      letter-spacing: 0.5px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .save-btn:active {
-      background: linear-gradient(135deg, var(--accent) 0%, #d4af37 100%);
+    .list-item-info {
+      flex: 1;
+    }
+
+    .list-item-role {
+      font-weight: 600;
+      font-size: 14px;
       color: var(--primary);
-      transform: scale(0.97);
-      box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
     }
 
-    .save-btn:disabled {
-      background: var(--text-muted);
-      cursor: not-allowed;
-      box-shadow: none;
+    .list-item-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .list-item-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .list-item-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-small {
+      padding: 6px 10px;
+      font-size: 11px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-small:active {
+      background: var(--danger);
+      color: white;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
-      padding: 16px;
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
     }
 
     .stat {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       padding: 12px;
-      background: var(--bg);
       border-radius: 6px;
       text-align: center;
     }
@@ -287,109 +294,58 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .list-tabs {
-      display: flex;
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 0 8px;
-      gap: 4px;
-    }
-
-    .list-tab {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .list-tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    .list-section {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      padding-bottom: var(--safe-bottom);
+    .password-input {
+      text-align: center;
+      letter-spacing: 3px;
     }
 
     .empty-state {
       text-align: center;
-      padding: 32px 16px;
       color: var(--text-muted);
+      padding: 32px 16px;
     }
 
-    .empty-state-icon {
-      font-size: 40px;
-      margin-bottom: 12px;
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
       font-size: 13px;
     }
 
-    th {
-      background: var(--bg);
-      padding: 10px;
-      text-align: left;
-      font-weight: 600;
-      border-bottom: 2px solid var(--border);
-      color: var(--text-muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    tr:hover {
-      background: var(--bg);
-    }
-
-    .status-select {
-      border: 1px solid var(--border);
-      background: transparent;
-      padding: 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .delete-btn {
-      padding: 4px 8px;
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid var(--danger);
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .delete-btn:active {
-      background: var(--danger);
+    .tab-btn.active {
+      background: var(--primary);
       color: white;
+      border-color: var(--primary);
     }
 
-    @media (max-width: 600px) {
-      th, td {
-        font-size: 12px;
-        padding: 8px;
-      }
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page.active .content {
+      display: block;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
     }
   </style>
 </head>
@@ -399,418 +355,397 @@
       <h1>💍 결혼식 하객 관리</h1>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-side="groom">신랑측</button>
-      <button class="tab" data-side="bride">신부측</button>
-    </div>
-
-    <div class="content">
-      <div class="input-section">
-        <div class="section-title">입력자 선택</div>
-        <div class="contributor-buttons" id="contributorButtons"></div>
-
-        <div class="form-group">
-          <label for="nameInput">이름 (개인 기록용, 공유 안 됨)</label>
-          <input type="text" id="nameInput" placeholder="예: 친구 3명, 큰아버지댁 등">
+    <!-- 역할 선택 페이지 -->
+    <div id="rolePage" class="page active">
+      <div class="content">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="setRoleSide('groom')">신랑측</button>
+          <button class="tab-btn" onclick="setRoleSide('bride')">신부측</button>
         </div>
 
-        <div class="form-group">
+        <div class="section">
+          <div class="section-title">역할 선택</div>
+          <div class="button-grid" id="roleButtons"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <button class="btn btn-primary" style="width: 100%;" onclick="goToDashboard()">📊 통계 보기 (신랑/신부)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 역할별 입력 페이지 -->
+    <div id="rolePage_inner" class="page">
+      <div class="content">
+        <button class="btn-back" onclick="goToRoles()">← 뒤로</button>
+
+        <div id="roleHeader" class="section" style="text-align: center;">
+          <div style="font-size: 20px; color: var(--primary); font-weight: 700; margin-bottom: 4px;" id="roleTitle"></div>
+        </div>
+
+        <div class="section">
+          <label>메모 (예: 친구 3명, 직장동료)</label>
+          <input type="text" id="roleNote" placeholder="개인 기록용">
+        </div>
+
+        <div class="section">
           <label>인원수</label>
           <div class="count-control">
-            <button class="count-btn" onclick="decreaseCount()">−</button>
-            <div class="count-display" id="countDisplay">1</div>
-            <button class="count-btn" onclick="increaseCount()">+</button>
+            <button class="count-btn" onclick="decreaseRoleCount()">−</button>
+            <div class="count-display" id="roleCountDisplay">1</div>
+            <button class="count-btn" onclick="increaseRoleCount()">+</button>
           </div>
         </div>
 
-        <button class="save-btn" id="saveBtn" onclick="saveSubmission()">추가하기</button>
-      </div>
+        <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="saveRoleSubmission()">추가하기</button>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-label">총 인원</div>
-          <div class="stat-value" id="totalCount">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">제출 건수</div>
-          <div class="stat-value" id="submitCount">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">참석</div>
-          <div class="stat-value" id="attendedCount" style="color: var(--success);">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">미응답</div>
-          <div class="stat-value" id="pendingCount" style="color: var(--warning);">0</div>
-        </div>
-      </div>
+        <div class="divider"></div>
 
-      <div class="list-tabs">
-        <button class="list-tab active" data-view="public">공개 목록</button>
-        <button class="list-tab" data-view="personal">내 제출</button>
-      </div>
-
-      <div class="list-section" id="publicSection">
-        <div id="emptyStatePublic" class="empty-state">
-          <div class="empty-state-icon">📋</div>
-          <div>아직 제출한 내용이 없습니다</div>
-        </div>
-        <table id="publicTable" style="display: none;">
-          <thead>
-            <tr>
-              <th>작성자</th>
-              <th>인원</th>
-              <th>상태</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div class="list-section" id="personalSection" style="display: none;">
-        <div id="emptyStatePersonal" class="empty-state">
-          <div class="empty-state-icon">📝</div>
-          <div>아직 제출한 내용이 없습니다</div>
-        </div>
-        <table id="personalTable" style="display: none;">
-          <thead>
-            <tr>
-              <th>역할</th>
-              <th>인원</th>
-              <th>메모</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="section-title">이미 입력한 내용</div>
+        <div id="roleSubmissionsList"></div>
       </div>
     </div>
+
+    <!-- 대시보드 페이지 -->
+    <div id="dashboardPage" class="page">
+      <div class="content">
+        <button class="btn-back" onclick="goToRoles()">← 뒤로</button>
+
+        <div class="section">
+          <div class="section-title">신랑/신부 선택</div>
+          <div class="tabs">
+            <button class="tab-btn active" onclick="setDashboardSide('groom')">신랑</button>
+            <button class="tab-btn" onclick="setDashboardSide('bride')">신부</button>
+          </div>
+        </div>
+
+        <div id="setPasswordSection">
+          <label>신규 비밀번호 설정 (4자리 숫자)</label>
+          <input type="number" id="newPasswordInput" class="password-input" placeholder="0000" maxlength="4" min="0" max="9999">
+          <label style="margin-top: 12px;">비밀번호 확인</label>
+          <input type="number" id="newPasswordConfirm" class="password-input" placeholder="0000" maxlength="4" min="0" max="9999">
+          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="setPassword()">비밀번호 설정</button>
+        </div>
+
+        <div id="loginSection" style="display: none;">
+          <label>비밀번호 입력 (4자리)</label>
+          <input type="password" id="passwordInput" class="password-input" placeholder="0000" maxlength="4">
+          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="checkPassword()">확인</button>
+        </div>
+
+        <div id="lockedContent" style="text-align: center; color: var(--text-muted); padding: 40px 16px;">
+          🔒 비밀번호를 입력해주세요
+        </div>
+
+        <div id="dashboardContent" style="display: none;">
+          <div class="divider"></div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">우리 측 총 인원</div>
+              <div class="stat-value" id="ourTotal">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">상대방 총 인원</div>
+              <div class="stat-value" id="theirTotal">0</div>
+            </div>
+          </div>
+
+          <div class="section-title">우리 측 세부 정보</div>
+          <div id="detailList"></div>
+
+          <div class="divider"></div>
+
+          <div class="section-title">상대방 (총 인원만 표시)</div>
+          <div class="stat">
+            <div class="stat-label">총 인원</div>
+            <div class="stat-value" id="theirTotalDisplay">0</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const CONTRIBUTORS = {
+    const ROLES = {
       groom: ['신랑', '아버지', '어머니', '동생'],
       bride: ['신부', '아버지', '어머니', '언니']
     };
 
     let currentSide = 'groom';
-    let selectedContributor = null;
-    let count = 1;
+    let currentRole = null;
+    let roleCount = 1;
     let submissions = [];
-    let personalSubmissions = [];
+    let passwords = {};
     let db = null;
-    let currentView = 'public';
 
     async function init() {
       db = await claude.use("db");
-      renderContributors();
       await loadSubmissions();
-      renderStats();
-      document.getElementById('nameInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') saveSubmission();
-      });
+      await loadPasswords();
+      renderRoleButtons();
     }
 
-    function renderContributors() {
-      const buttons = document.getElementById('contributorButtons');
-      buttons.innerHTML = CONTRIBUTORS[currentSide].map(name => `
-        <button class="contributor-btn ${selectedContributor === name ? 'active' : ''}"
-                onclick="selectContributor('${name}')">
-          ${name}
+    function setRoleSide(side) {
+      currentSide = side;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderRoleButtons();
+    }
+
+    function renderRoleButtons() {
+      const container = document.getElementById('roleButtons');
+      container.innerHTML = ROLES[currentSide].map(role => `
+        <button class="btn btn-role" onclick="goToRole('${role}')">
+          ${role}
         </button>
       `).join('');
     }
 
-    function selectContributor(name) {
-      selectedContributor = name;
-      renderContributors();
+    function goToRole(role) {
+      currentRole = role;
+      roleCount = 1;
+      document.getElementById('roleNote').value = '';
+      document.getElementById('roleCountDisplay').textContent = '1';
+      document.getElementById('roleTitle').textContent = `${currentSide === 'groom' ? '신랑측' : '신부측'} ${role}`;
+
+      document.getElementById('rolePage').classList.remove('active');
+      document.getElementById('rolePage_inner').classList.add('active');
+
+      renderRoleSubmissions();
     }
 
-    function increaseCount() {
-      count++;
-      document.getElementById('countDisplay').textContent = count;
+    function goToRoles() {
+      document.getElementById('rolePage_inner').classList.remove('active');
+      document.getElementById('dashboardPage').classList.remove('active');
+      document.getElementById('rolePage').classList.add('active');
     }
 
-    function decreaseCount() {
-      if (count > 1) {
-        count--;
-        document.getElementById('countDisplay').textContent = count;
+    function goToDashboard() {
+      document.getElementById('rolePage').classList.remove('active');
+      document.getElementById('dashboardPage').classList.add('active');
+      currentSide = 'groom';
+      updateDashboard();
+    }
+
+    function increaseRoleCount() {
+      roleCount++;
+      document.getElementById('roleCountDisplay').textContent = roleCount;
+    }
+
+    function decreaseRoleCount() {
+      if (roleCount > 1) {
+        roleCount--;
+        document.getElementById('roleCountDisplay').textContent = roleCount;
       }
     }
 
-    async function saveSubmission() {
-      if (!selectedContributor) {
-        alert('입력자를 선택해주세요.');
-        return;
-      }
-
-      const name = document.getElementById('nameInput').value.trim();
-      const contributor = `${currentSide === 'groom' ? '신랑측' : '신부측'} ${selectedContributor}`;
-      const submissionId = `sub_${Date.now()}`;
+    async function saveRoleSubmission() {
+      const note = document.getElementById('roleNote').value.trim();
+      const submission = {
+        id: `${Date.now()}`,
+        side: currentSide,
+        role: currentRole,
+        count: roleCount,
+        personalNote: note,
+        createdAt: Date.now()
+      };
 
       if (db) {
         try {
-          // 공개 데이터: 모두가 볼 수 있음 (이름 없음)
-          await db.collection("wedding/submissions").set(submissionId, {
-            contributor,
-            count,
-            status: 'pending',
-            createdAt: Date.now()
-          });
-
-          // 개인 기록: 입력자만 볼 수 있음 (이름 포함)
-          await db.collection("data/users/me/wedding-submissions").set(submissionId, {
-            contributor,
-            count,
-            personalNote: name,
-            createdAt: Date.now()
-          });
+          await db.collection("wedding/submissions").set(submission.id, submission);
         } catch (e) {
           console.error("DB save failed:", e);
-          const submission = {
-            id: submissionId,
-            contributor,
-            count,
-            status: 'pending',
-            personalNote: name,
-            createdAt: Date.now()
-          };
           submissions.push(submission);
-          personalSubmissions.push(submission);
-          saveToLocalStorage();
         }
       } else {
-        const submission = {
-          id: submissionId,
-          contributor,
-          count,
-          status: 'pending',
-          personalNote: name,
-          createdAt: Date.now()
-        };
         submissions.push(submission);
-        personalSubmissions.push(submission);
-        saveToLocalStorage();
       }
 
-      document.getElementById('nameInput').value = '';
-      count = 1;
-      document.getElementById('countDisplay').textContent = '1';
-      document.getElementById('nameInput').focus();
-
+      document.getElementById('roleNote').value = '';
+      roleCount = 1;
+      document.getElementById('roleCountDisplay').textContent = '1';
       await loadSubmissions();
-      renderStats();
+      renderRoleSubmissions();
+    }
+
+    function renderRoleSubmissions() {
+      const list = document.getElementById('roleSubmissionsList');
+      const items = submissions.filter(s => s.side === currentSide && s.role === currentRole);
+
+      if (items.length === 0) {
+        list.innerHTML = '<div class="empty-state">아직 입력한 내용이 없습니다</div>';
+        return;
+      }
+
+      list.innerHTML = items.map(item => `
+        <div class="list-item">
+          <div class="list-item-info">
+            <div class="list-item-count">${item.count}명</div>
+            ${item.personalNote ? `<div class="list-item-note">${item.personalNote}</div>` : ''}
+          </div>
+          <button class="btn-small" onclick="deleteSubmission('${item.id}')">삭제</button>
+        </div>
+      `).join('');
+    }
+
+    async function deleteSubmission(id) {
+      if (!confirm('삭제하시겠습니까?')) return;
+      submissions = submissions.filter(s => s.id !== id);
+      if (db) {
+        try {
+          await db.collection("wedding/submissions").delete(id);
+        } catch (e) {}
+      }
+      renderRoleSubmissions();
     }
 
     async function loadSubmissions() {
       if (db) {
         try {
-          // 공개 목록 로드
-          const publicResult = await db.collection("wedding/submissions").orderBy({ field: "createdAt", direction: "desc" }).get();
-          submissions = publicResult.docs.map(doc => ({ id: doc.id, ...doc.data }));
-
-          // 개인 제출 로드
-          const personalResult = await db.collection("data/users/me/wedding-submissions").orderBy({ field: "createdAt", direction: "desc" }).get();
-          personalSubmissions = personalResult.docs.map(doc => ({ id: doc.id, ...doc.data }));
-
-          // 실시간 구독
+          const result = await db.collection("wedding/submissions").orderBy({ field: "createdAt", direction: "desc" }).get();
+          submissions = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
           db.collection("wedding/submissions").onSnapshot((snapshot) => {
             submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data }));
-            renderList();
-            renderStats();
           });
-
-          db.collection("data/users/me/wedding-submissions").onSnapshot((snapshot) => {
-            personalSubmissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data }));
-            renderList();
-          });
-        } catch (e) {
-          console.log("DB not available");
-          loadFromLocalStorage();
-        }
-      } else {
-        loadFromLocalStorage();
-      }
-      renderList();
-    }
-
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem("wedding-submissions");
-      if (saved) {
-        try {
-          submissions = JSON.parse(saved);
         } catch (e) {
           submissions = [];
         }
       }
     }
 
-    function saveToLocalStorage() {
-      localStorage.setItem("wedding-submissions", JSON.stringify(submissions));
+    function setDashboardSide(side) {
+      currentSide = side;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      showPasswordScreen();
     }
 
-    function renderList() {
-      if (currentView === 'public') {
-        renderPublicList();
-      } else {
-        renderPersonalList();
+    async function loadPasswords() {
+      if (db) {
+        try {
+          const result = await db.collection("wedding/passwords").get();
+          passwords = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
+        } catch (e) {
+          passwords = {};
+        }
       }
     }
 
-    function renderPublicList() {
-      const tbody = document.querySelector('#publicTable tbody');
-      const emptyState = document.getElementById('emptyStatePublic');
-      const table = document.getElementById('publicTable');
+    function showPasswordScreen() {
+      const side = currentSide;
+      const hasPassword = passwords.some(p => p.id === side);
 
-      if (submissions.length === 0) {
-        emptyState.style.display = 'block';
-        table.style.display = 'none';
+      document.getElementById('lockedContent').style.display = 'none';
+      document.getElementById('dashboardContent').style.display = 'none';
+
+      if (hasPassword) {
+        document.getElementById('setPasswordSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+      } else {
+        document.getElementById('setPasswordSection').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('newPasswordConfirm').value = '';
+        document.getElementById('newPasswordInput').focus();
+      }
+    }
+
+    async function setPassword() {
+      const pwd1 = document.getElementById('newPasswordInput').value;
+      const pwd2 = document.getElementById('newPasswordConfirm').value;
+
+      if (!pwd1 || !pwd2) {
+        alert('비밀번호를 입력해주세요');
         return;
       }
 
-      emptyState.style.display = 'none';
-      table.style.display = 'table';
-
-      tbody.innerHTML = submissions.map(s => `
-        <tr>
-          <td>${s.contributor}</td>
-          <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
-          <td>
-            <select class="status-select" onchange="updateStatus('${s.id}', this.value)">
-              <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>미응답</option>
-              <option value="attended" ${s.status === 'attended' ? 'selected' : ''}>참석</option>
-              <option value="declined" ${s.status === 'declined' ? 'selected' : ''}>불참</option>
-            </select>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderPersonalList() {
-      const tbody = document.querySelector('#personalTable tbody');
-      const emptyState = document.getElementById('emptyStatePersonal');
-      const table = document.getElementById('personalTable');
-
-      if (personalSubmissions.length === 0) {
-        emptyState.style.display = 'block';
-        table.style.display = 'none';
+      if (pwd1.length !== 4 || pwd2.length !== 4) {
+        alert('비밀번호는 4자리 숫자여야 합니다');
         return;
       }
 
-      emptyState.style.display = 'none';
-      table.style.display = 'table';
-
-      const groupTotals = {};
-      personalSubmissions.forEach(s => {
-        groupTotals[s.contributor] = (groupTotals[s.contributor] || 0) + s.count;
-      });
-
-      tbody.innerHTML = personalSubmissions.map(s => `
-        <tr>
-          <td>${s.contributor} <span style="color: var(--text-muted); font-size: 12px;">(총 ${groupTotals[s.contributor]}명)</span></td>
-          <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
-          <td style="font-size: 12px; color: var(--text-muted);">${s.personalNote || '—'}</td>
-          <td>
-            <button class="delete-btn" onclick="deletePersonalSubmission('${s.id}')">삭제</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    async function updateStatus(id, status) {
-      const submission = submissions.find(s => s.id === id);
-      if (!submission) return;
+      if (pwd1 !== pwd2) {
+        alert('비밀번호가 일치하지 않습니다');
+        return;
+      }
 
       if (db) {
         try {
-          await db.collection("wedding/submissions").update(id, { status });
+          await db.collection("wedding/passwords").set(currentSide, { password: pwd1 });
+          passwords.push({ id: currentSide, password: pwd1 });
         } catch (e) {
-          console.error("Update failed:", e);
+          console.error("Password save failed:", e);
         }
       } else {
-        submission.status = status;
-        saveToLocalStorage();
-        renderList();
-        renderStats();
+        passwords.push({ id: currentSide, password: pwd1 });
+      }
+
+      showPasswordScreen();
+      alert('비밀번호가 설정되었습니다');
+    }
+
+    function checkPassword() {
+      const pwd = document.getElementById('passwordInput').value;
+      const storedPwd = passwords.find(p => p.id === currentSide);
+
+      if (!storedPwd) {
+        alert('비밀번호가 설정되지 않았습니다');
+        return;
+      }
+
+      if (pwd === storedPwd.password) {
+        document.getElementById('lockedContent').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
+        updateDashboard();
+      } else if (pwd.length === 4) {
+        alert('비밀번호가 틀렸습니다');
       }
     }
 
-    async function deleteSubmission(id) {
-      if (!confirm('정말 삭제하시겠습니까?')) return;
+    function updateDashboard() {
+      const ourSide = currentSide;
+      const theirSide = currentSide === 'groom' ? 'bride' : 'groom';
 
-      submissions = submissions.filter(s => s.id !== id);
+      const ourSubmissions = submissions.filter(s => s.side === ourSide);
+      const theirSubmissions = submissions.filter(s => s.side === theirSide);
 
-      if (db) {
-        try {
-          await db.collection("wedding/submissions").delete(id);
-        } catch (e) {
-          console.error("Delete failed:", e);
-        }
-      } else {
-        saveToLocalStorage();
-        renderList();
-        renderStats();
-      }
-    }
+      const ourTotal = ourSubmissions.reduce((sum, s) => sum + s.count, 0);
+      const theirTotal = theirSubmissions.reduce((sum, s) => sum + s.count, 0);
 
-    async function deletePersonalSubmission(id) {
-      if (!confirm('정말 삭제하시겠습니까?')) return;
+      document.getElementById('ourTotal').textContent = ourTotal;
+      document.getElementById('theirTotal').textContent = theirTotal;
+      document.getElementById('theirTotalDisplay').textContent = theirTotal;
 
-      personalSubmissions = personalSubmissions.filter(s => s.id !== id);
-
-      if (db) {
-        try {
-          await db.collection("wedding/submissions").delete(id);
-          await db.collection("data/users/me/wedding-submissions").delete(id).catch(() => {});
-        } catch (e) {
-          console.error("Delete failed:", e);
-        }
-      } else {
-        saveToLocalStorage();
-        renderList();
-        renderStats();
-      }
-    }
-
-    function renderStats() {
-      const total = submissions.reduce((sum, s) => sum + s.count, 0);
-      const attended = submissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
-      const pending = submissions.filter(s => s.status === 'pending').reduce((sum, s) => sum + s.count, 0);
-
-      document.getElementById('totalCount').textContent = total;
-      document.getElementById('submitCount').textContent = submissions.length;
-      document.getElementById('attendedCount').textContent = attended;
-      document.getElementById('pendingCount').textContent = pending;
-    }
-
-    // Tab switching (신랑측/신부측)
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentSide = tab.dataset.side;
-        selectedContributor = null;
-        count = 1;
-        document.getElementById('countDisplay').textContent = '1';
-        document.getElementById('nameInput').value = '';
-        renderContributors();
+      // 우리 측 세부 정보 (역할별)
+      const detailList = document.getElementById('detailList');
+      const roleGroups = {};
+      ourSubmissions.forEach(s => {
+        if (!roleGroups[s.role]) roleGroups[s.role] = [];
+        roleGroups[s.role].push(s);
       });
-    });
 
-    // List tab switching (공개 목록/내 제출)
-    document.querySelectorAll('.list-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.list-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentView = tab.dataset.view;
-
-        document.getElementById('publicSection').style.display = currentView === 'public' ? 'block' : 'none';
-        document.getElementById('personalSection').style.display = currentView === 'personal' ? 'block' : 'none';
-
-        renderList();
-      });
-    });
+      detailList.innerHTML = Object.entries(roleGroups).map(([role, items]) => {
+        const roleTotal = items.reduce((sum, s) => sum + s.count, 0);
+        return `
+          <div class="list-item">
+            <div class="list-item-info">
+              <div class="list-item-role">${role}</div>
+              <div class="list-item-count">총 ${roleTotal}명</div>
+              ${items.map(item => `
+                <div class="list-item-note">
+                  ${item.personalNote || '(메모 없음)'} - ${item.count}명
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('') || '<div class="empty-state">입력된 내용이 없습니다</div>';
+    }
 
     init();
   </script>
