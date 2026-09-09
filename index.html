@@ -1020,12 +1020,22 @@
 
     init();
 
-    document.getElementById('nameInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') saveSubmission();
-    });
+    // 요소가 존재할 때만 이벤트 리스너 추가
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('nameInput');
+      const dashPassword = document.getElementById('dashboardPassword');
 
-    document.getElementById('dashboardPassword').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') checkDashboardPassword();
+      if (nameInput) {
+        nameInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') saveSubmission();
+        });
+      }
+
+      if (dashPassword) {
+        dashPassword.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') checkDashboardPassword();
+        });
+      }
     });
   </script>
 </body>
