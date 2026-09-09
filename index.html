@@ -4,44 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#1B5E45">
+  <meta name="theme-color" content="#171717">
   <title>결혼식 하객 관리</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+CJK+KR:wght@400;500;700&display=swap">
   <style>
     :root {
-      --primary: #1B5E45;
-      --accent: #D4AF37;
+      --primary: #171717;
+      --accent: #404040;
       --success: #059669;
       --warning: #D97706;
       --danger: #DC2626;
-      --bg: linear-gradient(135deg, #f5f5f0 0%, #e8f4f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --text: #2D3E50;
-      --text-muted: #6B7280;
-      --border: #D4C5B9;
+      --bg: #ffffff;
+      --card-bg: #ffffff;
+      --text: #171717;
+      --text-muted: #737373;
+      --border: #e5e5e5;
       --safe-bottom: max(16px, env(safe-area-inset-bottom));
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --primary: #A8D5BA;
-        --accent: #D4AF37;
-        --bg: linear-gradient(135deg, #1a2f28 0%, #0f1f1a 100%);
-        --card-bg: rgba(45, 62, 80, 0.95);
-        --text: #F3F4F6;
-        --text-muted: #9CA3AF;
-        --border: #4B5563;
+        --primary: #ededed;
+        --accent: #a3a3a3;
+        --bg: #0a0a0a;
+        --card-bg: #1a1a1a;
+        --text: #ededed;
+        --text-muted: #a3a3a3;
+        --border: #333333;
       }
     }
 
     :root[data-theme="dark"] {
-      --primary: #A8D5BA;
-      --accent: #D4AF37;
-      --bg: linear-gradient(135deg, #1a2f28 0%, #0f1f1a 100%);
-      --card-bg: rgba(45, 62, 80, 0.95);
-      --text: #F3F4F6;
-      --text-muted: #9CA3AF;
-      --border: #4B5563;
+      --primary: #ededed;
+      --accent: #a3a3a3;
+      --bg: #0a0a0a;
+      --card-bg: #1a1a1a;
+      --text: #ededed;
+      --text-muted: #a3a3a3;
+      --border: #333333;
     }
 
     * {
@@ -67,19 +67,19 @@
     }
 
     .header {
-      background: linear-gradient(135deg, rgba(27, 94, 69, 0.08) 0%, rgba(212, 175, 55, 0.06) 100%);
+      background: var(--card-bg);
       border-bottom: 2px solid var(--border);
-      padding: 16px;
-      padding-top: max(16px, env(safe-area-inset-top));
+      padding: 20px;
+      padding-top: max(20px, env(safe-area-inset-top));
       text-align: center;
     }
 
     .header h1 {
       margin: 0;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 800;
       color: var(--primary);
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .content {
@@ -109,13 +109,14 @@
     }
 
     .btn {
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.2s;
+      letter-spacing: 0.3px;
     }
 
     .btn-role {
@@ -126,18 +127,18 @@
 
     .btn-role:active {
       transform: scale(0.95);
-      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.15);
+      box-shadow: 0 4px 12px rgba(23, 23, 23, 0.15);
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
+      background: var(--primary);
       color: white;
-      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.2);
+      box-shadow: 0 4px 12px rgba(23, 23, 23, 0.2);
     }
 
     .btn-primary:active {
       transform: scale(0.97);
-      box-shadow: 0 6px 16px rgba(27, 94, 69, 0.3);
+      box-shadow: 0 6px 16px rgba(23, 23, 23, 0.3);
     }
 
     .btn-back {
@@ -154,21 +155,22 @@
 
     label {
       display: block;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
       color: var(--text);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
-      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      padding: 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
       font-family: inherit;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: 600;
       color: var(--text);
       background: var(--card-bg);
     }
