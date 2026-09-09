@@ -4,25 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#171717">
+  <meta name="theme-color" content="#1B5E45">
   <title>결혼식 하객 관리</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+CJK+KR:wght@400;500;700&display=swap">
   <style>
     :root {
-      --primary: #171717;
-      --accent: #404040;
-      --primary-light: #2563EB;
-      --primary-dark: #1E40AF;
-      --primary-pink: #EC4899;
-      --primary-pink-dark: #DB2777;
+      --primary: #1B5E45;
+      --accent: #D4AF37;
       --success: #059669;
       --warning: #D97706;
       --danger: #DC2626;
       --bg: #ffffff;
       --card-bg: #ffffff;
-      --text: #171717;
-      --text-muted: #737373;
-      --border: #e5e5e5;
+      --text: #2D3E50;
+      --text-muted: #6B7280;
+      --border: #D4C5B9;
       --safe-bottom: max(16px, env(safe-area-inset-bottom));
     }
 
@@ -38,24 +34,24 @@
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --primary: #ededed;
-        --accent: #a3a3a3;
+        --primary: #A8D5BA;
+        --accent: #D4AF37;
         --bg: #0a0a0a;
         --card-bg: #1a1a1a;
-        --text: #ededed;
-        --text-muted: #a3a3a3;
-        --border: #333333;
+        --text: #F3F4F6;
+        --text-muted: #9CA3AF;
+        --border: #4B5563;
       }
     }
 
     :root[data-theme="dark"] {
-      --primary: #ededed;
-      --accent: #a3a3a3;
+      --primary: #A8D5BA;
+      --accent: #D4AF37;
       --bg: #0a0a0a;
       --card-bg: #1a1a1a;
-      --text: #ededed;
-      --text-muted: #a3a3a3;
-      --border: #333333;
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --border: #4B5563;
     }
 
     * {
@@ -86,6 +82,9 @@
       padding: 20px;
       padding-top: max(20px, env(safe-area-inset-top));
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .header h1 {
@@ -94,17 +93,43 @@
       font-weight: 800;
       color: var(--primary);
       letter-spacing: 1.5px;
+      flex: 1;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .header-btn:active {
+      background: var(--border);
     }
 
     .content {
       flex: 1;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
       padding: 16px;
-      padding-bottom: var(--safe-bottom);
     }
 
     .section {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .section-title {
@@ -113,7 +138,7 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      margin: 0 0 12px;
     }
 
     .button-grid {
@@ -122,105 +147,59 @@
       gap: 8px;
     }
 
-    .btn {
-      padding: 14px 28px;
-      border: none;
-      border-radius: 18px;
-      font-weight: 700;
-      font-size: 16px;
+    .role-btn {
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      letter-spacing: 0.3px;
-      width: 100%;
-      text-align: center;
     }
 
-    .btn-role {
-      background: var(--card-bg);
-      color: var(--text);
-      border: 2px solid var(--border);
+    .role-btn.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.25);
     }
 
-    .btn-role:active {
+    .role-btn:active {
       transform: scale(0.95);
-      box-shadow: 0 4px 12px rgba(23, 23, 23, 0.15);
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: white;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    .btn-primary:active {
-      transform: scale(0.97);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-    }
-
-    .btn-back {
-      background: var(--card-bg);
-      color: var(--primary);
-      border: 1px solid var(--border);
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
       margin-bottom: 16px;
-      width: 100%;
-      max-width: 100%;
     }
 
-    .btn-small {
-      padding: 6px 10px;
-      font-size: 11px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid var(--danger);
-      max-width: none;
-      margin: 0;
-      display: inline;
-    }
-
-    .btn-small:active {
-      background: var(--danger);
-      color: white;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
+    .tab-btn {
+      padding: 10px;
       border: 2px solid var(--border);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text);
+      border-radius: 6px;
       background: var(--card-bg);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
     }
 
-    input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
     }
 
     .count-control {
       display: flex;
       align-items: center;
       gap: 12px;
+      margin-bottom: 12px;
     }
 
     .count-btn {
@@ -236,6 +215,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .count-btn:active {
+      transform: scale(0.9);
     }
 
     .count-display {
@@ -246,72 +230,62 @@
       color: var(--primary);
     }
 
-    .list-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .list-item-info {
-      flex: 1;
-    }
-
-    .list-item-role {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--primary);
-    }
-
-    .list-item-count {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .list-item-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-style: italic;
-    }
-
-    .list-item-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-small {
-      padding: 6px 10px;
-      font-size: 11px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid var(--danger);
-    }
-
-    .btn-small:active {
-      background: var(--danger);
+    .btn {
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, #0f3d2e 100%);
       color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(27, 94, 69, 0.2);
+      letter-spacing: 0.5px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 6px 16px rgba(27, 94, 69, 0.3);
+    }
+
+    .btn:disabled {
+      background: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-back {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .btn-back:active {
+      background: var(--border);
     }
 
     .stats {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .stat {
+      padding: 12px;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 12px;
       border-radius: 6px;
       text-align: center;
     }
@@ -332,52 +306,99 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .password-input {
-      text-align: center;
-      letter-spacing: 3px;
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--text);
+      background: var(--card-bg);
+      margin-bottom: 12px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--bg);
+      padding: 10px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover {
+      background: var(--bg);
+    }
+
+    .status-select {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      padding: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .delete-btn {
+      padding: 4px 8px;
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .delete-btn:active {
+      background: var(--danger);
+      color: white;
     }
 
     .empty-state {
       text-align: center;
-      color: var(--text-muted);
       padding: 32px 16px;
+      color: var(--text-muted);
     }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .tab-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .page.active .content {
-      display: block;
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
     }
 
     .divider {
@@ -385,263 +406,371 @@
       background: var(--border);
       margin: 16px 0;
     }
+
+    .role-info {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .role-info .side {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .role-info .role {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
       <h1>💍 결혼식 하객 관리</h1>
+      <div class="header-actions" id="headerActions" style="display: none;">
+        <button class="header-btn" onclick="showSettings()" title="역할 변경">⚙️</button>
+      </div>
     </div>
 
-    <!-- 역할 선택 페이지 -->
-    <div id="rolePage" class="page active">
+    <!-- 첫 방문: 역할 등록 화면 -->
+    <div id="setupPage" style="display: none;">
       <div class="content">
-        <div class="tabs">
-          <button class="tab-btn active" onclick="setRoleSide('groom')">신랑측</button>
-          <button class="tab-btn" onclick="setRoleSide('bride')">신부측</button>
-        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 32px; text-align: center;">
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 48px; margin-bottom: 16px;">💍</div>
+            <h2 style="margin: 0; font-size: 18px; color: var(--text); margin-bottom: 8px;">기기 등록</h2>
+            <p style="margin: 0; color: var(--text-muted); font-size: 13px;">이 폰에서 하객을 입력할 사람을 선택해주세요</p>
+          </div>
 
-        <div class="section">
-          <div class="section-title">역할 선택</div>
-          <div class="button-grid" id="roleButtons"></div>
-        </div>
+          <div style="width: 100%; margin-bottom: 20px;">
+            <div style="margin-bottom: 16px;">
+              <div class="section-title">신랑측 / 신부측</div>
+              <div class="tabs">
+                <button onclick="selectSideForSetup('groom')" id="setupGroomBtn" class="tab-btn active">신랑측</button>
+                <button onclick="selectSideForSetup('bride')" id="setupBrideBtn" class="tab-btn">신부측</button>
+              </div>
+            </div>
 
-        <div class="divider"></div>
+            <div id="setupRoleContainer" style="margin-bottom: 16px;">
+              <div class="section-title">역할 선택</div>
+              <div class="button-grid" id="setupRoleButtons"></div>
+            </div>
+          </div>
 
-        <div class="section">
-          <button class="btn btn-primary" style="width: 100%;" onclick="goToDashboard()">📊 통계 보기 (신랑/신부)</button>
+          <button id="confirmSetupBtn" onclick="confirmRoleSetup()" class="btn" style="width: 100%;">등록하기</button>
         </div>
       </div>
     </div>
 
-    <!-- 역할별 입력 페이지 -->
-    <div id="rolePage_inner" class="page">
-      <div class="content">
-        <button class="btn-back" onclick="goToRoles()">← 뒤로</button>
-
-        <div id="roleHeader" class="section" style="text-align: center;">
-          <div style="font-size: 20px; color: var(--primary); font-weight: 700; margin-bottom: 4px;" id="roleTitle"></div>
+    <!-- 메인 앱 화면 -->
+    <div id="mainApp" style="display: none;">
+      <!-- 입력 페이지 -->
+      <div id="inputPage" class="content">
+        <div class="role-info">
+          <div class="side" id="currentSideLabel">신랑측</div>
+          <div class="role" id="currentRoleLabel">역할</div>
         </div>
 
         <div class="section">
-          <label>메모 (예: 친구 3명, 직장동료)</label>
-          <input type="text" id="roleNote" placeholder="개인 기록용">
+          <label for="nameInput">메모 (예: 친구 3명)</label>
+          <input type="text" id="nameInput" placeholder="개인 기록용, 공유 안 됨">
         </div>
 
         <div class="section">
           <label>인원수</label>
           <div class="count-control">
-            <button class="count-btn" onclick="decreaseRoleCount()">−</button>
-            <div class="count-display" id="roleCountDisplay">1</div>
-            <button class="count-btn" onclick="increaseRoleCount()">+</button>
+            <button class="count-btn" onclick="decreaseCount()">−</button>
+            <div class="count-display" id="countDisplay">1</div>
+            <button class="count-btn" onclick="increaseCount()">+</button>
           </div>
         </div>
 
-        <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="saveRoleSubmission()">추가하기</button>
+        <button class="btn" style="width: 100%;" onclick="saveSubmission()">추가하기</button>
 
         <div class="divider"></div>
 
-        <div class="section-title">이미 입력한 내용</div>
-        <div id="roleSubmissionsList"></div>
-      </div>
-    </div>
-
-    <!-- 대시보드 페이지 -->
-    <div id="dashboardPage" class="page">
-      <div class="content">
-        <button class="btn-back" onclick="goToRoles()">← 뒤로</button>
-
-        <div class="section">
-          <div class="section-title">신랑/신부 선택</div>
-          <div class="tabs">
-            <button class="tab-btn active" onclick="setDashboardSide('groom')">신랑</button>
-            <button class="tab-btn" onclick="setDashboardSide('bride')">신부</button>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">총 인원</div>
+            <div class="stat-value" id="totalCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">제출 건수</div>
+            <div class="stat-value" id="submitCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">참석</div>
+            <div class="stat-value" id="attendedCount" style="color: var(--success);">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">미응답</div>
+            <div class="stat-value" id="pendingCount" style="color: var(--warning);">0</div>
           </div>
         </div>
 
-        <div id="setPasswordSection">
-          <label>신규 비밀번호 설정 (4자리 숫자)</label>
-          <input type="number" id="newPasswordInput" class="password-input" placeholder="0000" maxlength="4" min="0" max="9999">
-          <label style="margin-top: 12px;">비밀번호 확인</label>
-          <input type="number" id="newPasswordConfirm" class="password-input" placeholder="0000" maxlength="4" min="0" max="9999">
-          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="setPassword()">비밀번호 설정</button>
+        <div class="section-title">내 제출 내역</div>
+        <div id="personalSection"></div>
+      </div>
+
+      <!-- 신랑/신부 대시보드 -->
+      <div id="dashboardPage" style="display: none;" class="content">
+        <button class="btn-back" onclick="showInputPage()">← 뒤로</button>
+
+        <div class="section">
+          <label style="margin-bottom: 12px;">신랑/신부 비밀번호 입력</label>
+          <input type="password" id="dashboardPassword" placeholder="비밀번호" maxlength="8">
+          <button class="btn" style="width: 100%;" onclick="checkDashboardPassword()">확인</button>
         </div>
 
-        <div id="loginSection" style="display: none;">
-          <label>비밀번호 입력 (4자리)</label>
-          <input type="password" id="passwordInput" class="password-input" placeholder="0000" maxlength="4">
-          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="checkPassword()">확인</button>
-        </div>
-
-        <div id="lockedContent" style="text-align: center; color: var(--text-muted); padding: 40px 16px;">
+        <div id="dashboardLocked" style="text-align: center; color: var(--text-muted); padding: 40px 16px;">
           🔒 비밀번호를 입력해주세요
         </div>
 
-        <div id="dashboardContent" style="display: none;">
+        <div id="dashboardUnlocked" style="display: none;">
           <div class="divider"></div>
+
+          <div class="section">
+            <div class="section-title">신랑측 / 신부측</div>
+            <div class="tabs">
+              <button onclick="switchDashboardSide('groom')" id="dashGroomBtn" class="tab-btn active">신랑측</button>
+              <button onclick="switchDashboardSide('bride')" id="dashBrideBtn" class="tab-btn">신부측</button>
+            </div>
+          </div>
 
           <div class="stats">
             <div class="stat">
-              <div class="stat-label" id="ourSideLabel">신랑측 총 인원</div>
-              <div class="stat-value" id="ourTotal">0</div>
+              <div class="stat-label">총 인원</div>
+              <div class="stat-value" id="dashTotal">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label" id="theirSideLabel">신부측 총 인원</div>
-              <div class="stat-value" id="theirTotal">0</div>
+              <div class="stat-label">제출 건수</div>
+              <div class="stat-value" id="dashSubmitCount">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">참석</div>
+              <div class="stat-value" id="dashAttended" style="color: var(--success);">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">미응답</div>
+              <div class="stat-value" id="dashPending" style="color: var(--warning);">0</div>
             </div>
           </div>
 
-          <div class="section-title" id="ourSideDetailLabel">신랑측 세부 정보</div>
-          <div id="detailList"></div>
+          <div class="section-title">제출 목록</div>
+          <div id="dashboardList"></div>
+        </div>
+      </div>
+    </div>
 
-          <div class="divider"></div>
+    <!-- 설정 화면 -->
+    <div id="settingsPage" style="display: none;">
+      <div class="content">
+        <button class="btn-back" onclick="hideSettings()">← 뒤로</button>
 
-          <div class="section-title" id="theirSideDisplayLabel">신부측 (총 인원만 표시)</div>
-          <div class="stat">
-            <div class="stat-label">총 인원</div>
-            <div class="stat-value" id="theirTotalDisplay">0</div>
+        <div class="section">
+          <div class="role-info">
+            <div class="side" id="settingsSideLabel">신랑측</div>
+            <div class="role" id="settingsRoleLabel">역할</div>
           </div>
+        </div>
+
+        <div class="section">
+          <button class="btn" style="width: 100%; background: var(--danger); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);" onclick="changeRole()">역할 변경</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <label style="margin-bottom: 12px;">신랑/신부만 사용</label>
+          <button class="btn" style="width: 100%;" onclick="goToDashboard()">📊 대시보드 보기</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const ROLES = {
+    const CONTRIBUTORS = {
       groom: ['신랑', '아버지', '어머니', '동생'],
       bride: ['신부', '아버지', '어머니', '언니']
     };
 
-    let currentSide = 'groom';
-    let currentRole = null;
-    let roleCount = 1;
+    let registeredRole = null;
+    let currentDashboardSide = 'groom';
+    let isEditMode = false;
     let submissions = [];
-    let passwords = {};
     let db = null;
+    let count = 1;
 
     async function init() {
       db = await claude.use("db");
-      await loadSubmissions();
-      await loadPasswords();
-      renderRoleButtons();
+
+      const saved = localStorage.getItem("wedding-registered-role");
+      if (!saved) {
+        showSetupPage();
+        return;
+      }
+
+      registeredRole = JSON.parse(saved);
+      showMainApp();
     }
 
-    function setRoleSide(side) {
-      currentSide = side;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      renderRoleButtons();
+    function showSetupPage() {
+      document.getElementById('setupPage').style.display = 'block';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('settingsPage').style.display = 'none';
+
+      selectSideForSetup('groom');
     }
 
-    function renderRoleButtons() {
-      const container = document.getElementById('roleButtons');
-      container.innerHTML = ROLES[currentSide].map(role => `
-        <button class="btn btn-role" onclick="goToRole('${role}')">
-          ${role}
-        </button>
+    let setupSide = 'groom';
+    let setupRole = null;
+
+    function selectSideForSetup(side) {
+      setupSide = side;
+      document.getElementById('setupGroomBtn').classList.toggle('active', side === 'groom');
+      document.getElementById('setupBrideBtn').classList.toggle('active', side === 'bride');
+
+      const roles = CONTRIBUTORS[side];
+      const roleContainer = document.getElementById('setupRoleButtons');
+      setupRole = null;
+      roleContainer.innerHTML = roles.map(role => `
+        <button onclick="selectRoleForSetup('${role}')" class="role-btn">${role}</button>
       `).join('');
     }
 
-    function goToRole(role) {
-      currentRole = role;
-      roleCount = 1;
-      document.getElementById('roleNote').value = '';
-      document.getElementById('roleCountDisplay').textContent = '1';
-      document.getElementById('roleTitle').textContent = `${currentSide === 'groom' ? '신랑측' : '신부측'} ${role}`;
-
-      document.getElementById('rolePage').classList.remove('active');
-      document.getElementById('rolePage_inner').classList.add('active');
-
-      renderRoleSubmissions();
+    function selectRoleForSetup(role) {
+      setupRole = role;
+      document.querySelectorAll('#setupRoleButtons .role-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === role);
+      });
     }
 
-    function goToRoles() {
-      document.getElementById('rolePage_inner').classList.remove('active');
-      document.getElementById('dashboardPage').classList.remove('active');
-      document.getElementById('rolePage').classList.add('active');
+    function confirmRoleSetup() {
+      if (!setupSide || !setupRole) {
+        alert('신랑측/신부측과 역할을 선택해주세요.');
+        return;
+      }
 
-      // 기본 테마로 리셋
-      document.documentElement.classList.remove('groom-theme', 'bride-theme');
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#171717');
+      registeredRole = { side: setupSide, role: setupRole };
+      localStorage.setItem("wedding-registered-role", JSON.stringify(registeredRole));
+
+      location.reload();
     }
 
-    function goToDashboard() {
-      document.getElementById('rolePage').classList.remove('active');
-      document.getElementById('dashboardPage').classList.add('active');
-      currentSide = 'groom';
-      updateDashboard();
+    function showMainApp() {
+      document.getElementById('setupPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('settingsPage').style.display = 'none';
+      document.getElementById('headerActions').style.display = 'flex';
+      document.getElementById('inputPage').style.display = 'block';
+      document.getElementById('dashboardPage').style.display = 'none';
+
+      updateCurrentRoleDisplay();
+      applyTheme();
+      loadSubmissions();
+      renderStats();
     }
 
-    function increaseRoleCount() {
-      roleCount++;
-      document.getElementById('roleCountDisplay').textContent = roleCount;
+    function showSettings() {
+      document.getElementById('setupPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('settingsPage').style.display = 'block';
+      document.getElementById('headerActions').style.display = 'flex';
+
+      updateSettingsDisplay();
     }
 
-    function decreaseRoleCount() {
-      if (roleCount > 1) {
-        roleCount--;
-        document.getElementById('roleCountDisplay').textContent = roleCount;
+    function hideSettings() {
+      showMainApp();
+    }
+
+    function updateCurrentRoleDisplay() {
+      const sideLabel = registeredRole.side === 'groom' ? '신랑측' : '신부측';
+      document.getElementById('currentSideLabel').textContent = sideLabel;
+      document.getElementById('currentRoleLabel').textContent = registeredRole.role;
+    }
+
+    function updateSettingsDisplay() {
+      const sideLabel = registeredRole.side === 'groom' ? '신랑측' : '신부측';
+      document.getElementById('settingsSideLabel').textContent = sideLabel;
+      document.getElementById('settingsRoleLabel').textContent = registeredRole.role;
+    }
+
+    function changeRole() {
+      localStorage.removeItem("wedding-registered-role");
+      localStorage.removeItem("wedding-edit-password");
+      location.reload();
+    }
+
+    function applyTheme() {
+      const root = document.documentElement;
+      if (registeredRole.side === 'groom') {
+        root.classList.add('groom-theme');
+        root.classList.remove('bride-theme');
+      } else {
+        root.classList.add('bride-theme');
+        root.classList.remove('groom-theme');
       }
     }
 
-    async function saveRoleSubmission() {
-      const note = document.getElementById('roleNote').value.trim();
+    function increaseCount() {
+      count++;
+      document.getElementById('countDisplay').textContent = count;
+    }
+
+    function decreaseCount() {
+      if (count > 1) {
+        count--;
+        document.getElementById('countDisplay').textContent = count;
+      }
+    }
+
+    async function saveSubmission() {
+      const name = document.getElementById('nameInput').value.trim();
+      const contributor = `${registeredRole.side === 'groom' ? '신랑측' : '신부측'} ${registeredRole.role}`;
+      const submissionId = `sub_${Date.now()}`;
+
       const submission = {
-        id: `${Date.now()}`,
-        side: currentSide,
-        role: currentRole,
-        count: roleCount,
-        personalNote: note,
-        createdAt: Date.now()
+        id: submissionId,
+        contributor,
+        count,
+        status: 'pending',
+        personalNote: name,
+        createdAt: Date.now(),
+        userSide: registeredRole.side,
+        userRole: registeredRole.role
       };
 
       if (db) {
         try {
-          await db.collection("wedding/submissions").set(submission.id, submission);
+          await db.collection("wedding/submissions").set(submissionId, submission);
+          await db.collection("data/users/me/submissions").set(submissionId, submission);
         } catch (e) {
           console.error("DB save failed:", e);
           submissions.push(submission);
+          saveToLocalStorage();
         }
       } else {
         submissions.push(submission);
+        saveToLocalStorage();
       }
 
-      document.getElementById('roleNote').value = '';
-      roleCount = 1;
-      document.getElementById('roleCountDisplay').textContent = '1';
+      document.getElementById('nameInput').value = '';
+      count = 1;
+      document.getElementById('countDisplay').textContent = '1';
+      document.getElementById('nameInput').focus();
+
       await loadSubmissions();
-      renderRoleSubmissions();
-    }
-
-    function renderRoleSubmissions() {
-      const list = document.getElementById('roleSubmissionsList');
-      const items = submissions.filter(s => s.side === currentSide && s.role === currentRole);
-
-      if (items.length === 0) {
-        list.innerHTML = '<div class="empty-state">아직 입력한 내용이 없습니다</div>';
-        return;
-      }
-
-      list.innerHTML = items.map(item => `
-        <div class="list-item">
-          <div class="list-item-info">
-            <div class="list-item-count">${item.count}명</div>
-            ${item.personalNote ? `<div class="list-item-note">${item.personalNote}</div>` : ''}
-          </div>
-          <button class="btn-small" onclick="deleteSubmission('${item.id}')">삭제</button>
-        </div>
-      `).join('');
-    }
-
-    async function deleteSubmission(id) {
-      if (!confirm('삭제하시겠습니까?')) return;
-      submissions = submissions.filter(s => s.id !== id);
-      if (db) {
-        try {
-          await db.collection("wedding/submissions").delete(id);
-        } catch (e) {}
-      }
-      renderRoleSubmissions();
+      renderStats();
     }
 
     async function loadSubmissions() {
@@ -649,230 +778,255 @@
         try {
           const result = await db.collection("wedding/submissions").orderBy({ field: "createdAt", direction: "desc" }).get();
           submissions = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
+
           db.collection("wedding/submissions").onSnapshot((snapshot) => {
             submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data }));
+            renderPersonalList();
+            renderStats();
+            if (isEditMode) {
+              renderDashboardList();
+              updateDashboardStats();
+            }
           });
+        } catch (e) {
+          console.log("DB not available");
+          loadFromLocalStorage();
+        }
+      } else {
+        loadFromLocalStorage();
+      }
+      renderPersonalList();
+    }
+
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem("wedding-submissions");
+      if (saved) {
+        try {
+          submissions = JSON.parse(saved);
         } catch (e) {
           submissions = [];
         }
       }
     }
 
-    function setDashboardSide(side) {
-      currentSide = side;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-
-      // 테마 적용
-      document.documentElement.classList.remove('groom-theme', 'bride-theme');
-      if (side === 'groom') {
-        document.documentElement.classList.add('groom-theme');
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#2563EB');
-      } else {
-        document.documentElement.classList.add('bride-theme');
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#EC4899');
-      }
-
-      showPasswordScreen();
+    function saveToLocalStorage() {
+      localStorage.setItem("wedding-submissions", JSON.stringify(submissions));
     }
 
-    async function loadPasswords() {
-      // 로컬 스토리지에서 로드
-      const saved = localStorage.getItem("wedding-passwords");
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          if (typeof data === 'object' && !Array.isArray(data)) {
-            // 객체 형식인 경우 배열로 변환
-            passwords = Object.entries(data).map(([id, password]) => ({ id, password }));
-          } else if (Array.isArray(data)) {
-            passwords = data;
-          } else {
-            passwords = [];
-          }
-          console.log('localStorage에서 로드된 비밀번호:', passwords);
-          return;
-        } catch (e) {
-          console.error('localStorage 파싱 에러:', e);
-        }
-      }
+    function renderPersonalList() {
+      const personalSection = document.getElementById('personalSection');
+      const mySubmissions = submissions.filter(s =>
+        s.userSide === registeredRole.side && s.userRole === registeredRole.role
+      );
 
-      passwords = [];
-    }
-
-    function savePasswordLocal() {
-      localStorage.setItem("wedding-passwords", JSON.stringify(passwords));
-    }
-
-    function showPasswordScreen() {
-      const side = currentSide;
-      const hasPassword = passwords.some(p => p.id === side);
-
-      document.getElementById('lockedContent').style.display = 'block';
-      document.getElementById('dashboardContent').style.display = 'none';
-
-      if (hasPassword) {
-        document.getElementById('setPasswordSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-        document.getElementById('passwordInput').value = '';
-        document.getElementById('passwordInput').focus();
-      } else {
-        document.getElementById('setPasswordSection').style.display = 'block';
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('newPasswordInput').value = '';
-        document.getElementById('newPasswordConfirm').value = '';
-        document.getElementById('newPasswordInput').focus();
-      }
-    }
-
-    function setPassword() {
-      const pwd1 = document.getElementById('newPasswordInput').value.trim();
-      const pwd2 = document.getElementById('newPasswordConfirm').value.trim();
-
-      console.log('비밀번호 설정 시도:', pwd1, pwd2);
-
-      if (!pwd1 || !pwd2) {
-        alert('비밀번호를 입력해주세요');
-        return;
-      }
-
-      if (pwd1.length !== 4 || pwd2.length !== 4) {
-        alert('비밀번호는 4자리 숫자여야 합니다');
-        return;
-      }
-
-      if (pwd1 !== pwd2) {
-        alert('두 비밀번호가 일치하지 않습니다');
-        return;
-      }
-
-      // 로컬스토리지에 저장
-      const passwordData = {};
-      const saved = localStorage.getItem("wedding-passwords");
-      if (saved) {
-        try {
-          const existing = JSON.parse(saved);
-          if (Array.isArray(existing)) {
-            existing.forEach(p => {
-              passwordData[p.id] = p.password;
-            });
-          } else {
-            Object.assign(passwordData, existing);
-          }
-        } catch (e) {}
-      }
-
-      passwordData[currentSide] = pwd1;
-      localStorage.setItem("wedding-passwords", JSON.stringify(passwordData));
-
-      // 메모리의 passwords 배열 업데이트
-      passwords = Object.entries(passwordData).map(([id, password]) => ({ id, password }));
-
-      console.log('저장된 비밀번호들:', passwords);
-
-      // db에도 저장 시도
-      if (db) {
-        try {
-          db.collection("wedding/passwords").set(currentSide, { password: pwd1 });
-        } catch (e) {
-          console.error("DB save failed:", e);
-        }
-      }
-
-      alert('비밀번호가 설정되었습니다');
-      showPasswordScreen();
-    }
-
-    function checkPassword() {
-      const pwd = document.getElementById('passwordInput').value.trim();
-
-      console.log('입력된 비밀번호:', pwd);
-      console.log('저장된 비밀번호들:', passwords);
-      console.log('현재 측면:', currentSide);
-
-      if (!pwd || pwd.length !== 4) {
-        alert('비밀번호를 4자리로 입력해주세요');
-        return;
-      }
-
-      // 저장된 비밀번호 찾기
-      let storedPwd = null;
-      for (let p of passwords) {
-        if (String(p.id) === String(currentSide)) {
-          storedPwd = p.password;
-          break;
-        }
-      }
-
-      console.log('찾은 저장된 비밀번호:', storedPwd);
-
-      if (!storedPwd) {
-        alert('설정된 비밀번호가 없습니다. 다시 설정해주세요.');
-        showPasswordScreen();
-        return;
-      }
-
-      if (String(pwd) === String(storedPwd)) {
-        console.log('비밀번호 일치!');
-        document.getElementById('lockedContent').style.display = 'none';
-        document.getElementById('dashboardContent').style.display = 'block';
-        updateDashboard();
-      } else {
-        console.log('비밀번호 불일치. 입력:', pwd, '저장됨:', storedPwd);
-        alert('비밀번호가 틀렸습니다');
-        document.getElementById('passwordInput').value = '';
-      }
-    }
-
-    function updateDashboard() {
-      const ourSide = currentSide;
-      const theirSide = currentSide === 'groom' ? 'bride' : 'groom';
-
-      const ourSideLabel = ourSide === 'groom' ? '신랑측' : '신부측';
-      const theirSideLabel = theirSide === 'groom' ? '신랑측' : '신부측';
-
-      const ourSubmissions = submissions.filter(s => s.side === ourSide);
-      const theirSubmissions = submissions.filter(s => s.side === theirSide);
-
-      const ourTotal = ourSubmissions.reduce((sum, s) => sum + s.count, 0);
-      const theirTotal = theirSubmissions.reduce((sum, s) => sum + s.count, 0);
-
-      document.getElementById('ourSideLabel').textContent = ourSideLabel + ' 총 인원';
-      document.getElementById('theirSideLabel').textContent = theirSideLabel + ' 총 인원';
-      document.getElementById('ourSideDetailLabel').textContent = ourSideLabel + ' 세부 정보';
-      document.getElementById('theirSideDisplayLabel').textContent = theirSideLabel + ' (총 인원만 표시)';
-
-      document.getElementById('ourTotal').textContent = ourTotal;
-      document.getElementById('theirTotal').textContent = theirTotal;
-      document.getElementById('theirTotalDisplay').textContent = theirTotal;
-
-      // 우리 측 세부 정보 (역할별)
-      const detailList = document.getElementById('detailList');
-      const roleGroups = {};
-      ourSubmissions.forEach(s => {
-        if (!roleGroups[s.role]) roleGroups[s.role] = [];
-        roleGroups[s.role].push(s);
-      });
-
-      detailList.innerHTML = Object.entries(roleGroups).map(([role, items]) => {
-        const roleTotal = items.reduce((sum, s) => sum + s.count, 0);
-        return `
-          <div class="list-item">
-            <div class="list-item-info">
-              <div class="list-item-role">${role}</div>
-              <div class="list-item-count">총 ${roleTotal}명</div>
-              ${items.map(item => `
-                <div class="list-item-note">
-                  ${item.personalNote || '(메모 없음)'} - ${item.count}명
-                </div>
-              `).join('')}
-            </div>
+      if (mySubmissions.length === 0) {
+        personalSection.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <div>아직 입력한 내용이 없습니다</div>
           </div>
         `;
-      }).join('') || '<div class="empty-state">입력된 내용이 없습니다</div>';
+        return;
+      }
+
+      personalSection.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>인원</th>
+              <th>메모</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${mySubmissions.map(s => `
+              <tr>
+                <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
+                <td style="font-size: 12px; color: var(--text-muted);">${s.personalNote || '—'}</td>
+                <td>
+                  <button class="delete-btn" onclick="deleteSubmission('${s.id}')">삭제</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderStats() {
+      const total = submissions.reduce((sum, s) => sum + s.count, 0);
+      const attended = submissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
+      const pending = submissions.filter(s => s.status === 'pending').reduce((sum, s) => sum + s.count, 0);
+
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('submitCount').textContent = submissions.length;
+      document.getElementById('attendedCount').textContent = attended;
+      document.getElementById('pendingCount').textContent = pending;
+    }
+
+    async function deleteSubmission(id) {
+      if (!confirm('삭제하시겠습니까?')) return;
+
+      submissions = submissions.filter(s => s.id !== id);
+
+      if (db) {
+        try {
+          await db.collection("wedding/submissions").delete(id);
+          await db.collection("data/users/me/submissions").delete(id).catch(() => {});
+        } catch (e) {
+          console.error("Delete failed:", e);
+        }
+      } else {
+        saveToLocalStorage();
+      }
+
+      await loadSubmissions();
+    }
+
+    function goToDashboard() {
+      if (registeredRole.role !== '신랑' && registeredRole.role !== '신부') {
+        alert('신랑 또는 신부만 대시보드에 접근할 수 있습니다.');
+        return;
+      }
+
+      document.getElementById('inputPage').style.display = 'none';
+      document.getElementById('dashboardPage').style.display = 'block';
+      isEditMode = false;
+      document.getElementById('dashboardPassword').value = '';
+      document.getElementById('dashboardPassword').focus();
+    }
+
+    function showInputPage() {
+      document.getElementById('inputPage').style.display = 'block';
+      document.getElementById('dashboardPage').style.display = 'none';
+      isEditMode = false;
+    }
+
+    function checkDashboardPassword() {
+      const password = document.getElementById('dashboardPassword').value;
+      const savedPassword = localStorage.getItem("wedding-edit-password");
+
+      if (!savedPassword) {
+        if (password.length >= 4) {
+          localStorage.setItem("wedding-edit-password", password);
+          unlockDashboard();
+        } else {
+          alert('최소 4자 이상의 비밀번호를 설정해주세요.');
+        }
+        return;
+      }
+
+      if (password === savedPassword) {
+        unlockDashboard();
+      } else {
+        alert('비밀번호가 맞지 않습니다.');
+      }
+    }
+
+    function unlockDashboard() {
+      isEditMode = true;
+      document.getElementById('dashboardLocked').style.display = 'none';
+      document.getElementById('dashboardUnlocked').style.display = 'block';
+      switchDashboardSide('groom');
+    }
+
+    function switchDashboardSide(side) {
+      currentDashboardSide = side;
+      document.getElementById('dashGroomBtn').classList.toggle('active', side === 'groom');
+      document.getElementById('dashBrideBtn').classList.toggle('active', side === 'bride');
+      renderDashboardList();
+      updateDashboardStats();
+    }
+
+    function renderDashboardList() {
+      const dashboardList = document.getElementById('dashboardList');
+      const sideSubmissions = submissions.filter(s => {
+        const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+        return subSide === currentDashboardSide;
+      });
+
+      if (sideSubmissions.length === 0) {
+        dashboardList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div>아직 입력한 내용이 없습니다</div>
+          </div>
+        `;
+        return;
+      }
+
+      dashboardList.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>작성자</th>
+              <th>인원</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sideSubmissions.map(s => `
+              <tr>
+                <td>${s.contributor}</td>
+                <td style="font-weight: 700; font-size: 14px;">${s.count}명</td>
+                <td>
+                  <select class="status-select" onchange="updateStatus('${s.id}', this.value)">
+                    <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>미응답</option>
+                    <option value="attended" ${s.status === 'attended' ? 'selected' : ''}>참석</option>
+                    <option value="declined" ${s.status === 'declined' ? 'selected' : ''}>불참</option>
+                  </select>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function updateDashboardStats() {
+      const sideSubmissions = submissions.filter(s => {
+        const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+        return subSide === currentDashboardSide;
+      });
+
+      const total = sideSubmissions.reduce((sum, s) => sum + s.count, 0);
+      const attended = sideSubmissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
+      const pending = sideSubmissions.filter(s => s.status === 'pending').reduce((sum, s) => sum + s.count, 0);
+
+      document.getElementById('dashTotal').textContent = total;
+      document.getElementById('dashSubmitCount').textContent = sideSubmissions.length;
+      document.getElementById('dashAttended').textContent = attended;
+      document.getElementById('dashPending').textContent = pending;
+    }
+
+    async function updateStatus(id, status) {
+      const submission = submissions.find(s => s.id === id);
+      if (!submission) return;
+
+      submission.status = status;
+
+      if (db) {
+        try {
+          await db.collection("wedding/submissions").update(id, { status });
+        } catch (e) {
+          console.error("Update failed:", e);
+        }
+      } else {
+        saveToLocalStorage();
+        renderDashboardList();
+        updateDashboardStats();
+      }
     }
 
     init();
+
+    document.getElementById('nameInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') saveSubmission();
+    });
+
+    document.getElementById('dashboardPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkDashboardPassword();
+    });
   </script>
 </body>
 </html>
