@@ -11,6 +11,10 @@
     :root {
       --primary: #171717;
       --accent: #404040;
+      --primary-light: #2563EB;
+      --primary-dark: #1E40AF;
+      --primary-pink: #EC4899;
+      --primary-pink-dark: #DB2777;
       --success: #059669;
       --warning: #D97706;
       --danger: #DC2626;
@@ -20,6 +24,16 @@
       --text-muted: #737373;
       --border: #e5e5e5;
       --safe-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    :root.groom-theme {
+      --primary: #2563EB;
+      --accent: #1E40AF;
+    }
+
+    :root.bride-theme {
+      --primary: #EC4899;
+      --accent: #DB2777;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -131,14 +145,14 @@
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: white;
-      box-shadow: 0 4px 12px rgba(23, 23, 23, 0.2);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     }
 
     .btn-primary:active {
       transform: scale(0.97);
-      box-shadow: 0 6px 16px rgba(23, 23, 23, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     .btn-back {
@@ -523,6 +537,10 @@
       document.getElementById('rolePage_inner').classList.remove('active');
       document.getElementById('dashboardPage').classList.remove('active');
       document.getElementById('rolePage').classList.add('active');
+
+      // 기본 테마로 리셋
+      document.documentElement.classList.remove('groom-theme', 'bride-theme');
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#171717');
     }
 
     function goToDashboard() {
@@ -622,6 +640,17 @@
       currentSide = side;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
+
+      // 테마 적용
+      document.documentElement.classList.remove('groom-theme', 'bride-theme');
+      if (side === 'groom') {
+        document.documentElement.classList.add('groom-theme');
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#2563EB');
+      } else {
+        document.documentElement.classList.add('bride-theme');
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#EC4899');
+      }
+
       showPasswordScreen();
     }
 
