@@ -532,16 +532,12 @@
               <div class="stat-value" id="dashTotal">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">제출 건수</div>
-              <div class="stat-value" id="dashSubmitCount">0</div>
-            </div>
-            <div class="stat">
               <div class="stat-label">참석</div>
               <div class="stat-value" id="dashAttended" style="color: var(--success);">0</div>
             </div>
             <div class="stat">
-              <div class="stat-label">미응답</div>
-              <div class="stat-value" id="dashPending" style="color: var(--warning);">0</div>
+              <div class="stat-label">불참</div>
+              <div class="stat-value" id="dashDeclined" style="color: var(--danger);">0</div>
             </div>
           </div>
 
@@ -978,12 +974,11 @@
 
       const total = sideSubmissions.reduce((sum, s) => sum + s.count, 0);
       const attended = sideSubmissions.filter(s => s.status === 'attended').reduce((sum, s) => sum + s.count, 0);
-      const pending = sideSubmissions.filter(s => s.status === 'pending').reduce((sum, s) => sum + s.count, 0);
+      const declined = sideSubmissions.filter(s => s.status === 'declined').reduce((sum, s) => sum + s.count, 0);
 
       document.getElementById('dashTotal').textContent = total;
-      document.getElementById('dashSubmitCount').textContent = sideSubmissions.length;
       document.getElementById('dashAttended').textContent = attended;
-      document.getElementById('dashPending').textContent = pending;
+      document.getElementById('dashDeclined').textContent = declined;
     }
 
     async function updateStatus(id, status) {
