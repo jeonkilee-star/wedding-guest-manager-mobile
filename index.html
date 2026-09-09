@@ -239,23 +239,30 @@
     }
 
     .btn-back {
-      width: 44px;
+      min-width: 96px;
       height: 44px;
-      border: 1px solid var(--border);
-      background: var(--card-bg);
-      color: var(--text);
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 0 18px;
+      border: none;
+      background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+      color: white;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
       transition: all 0.2s;
     }
 
     .btn-back:active {
-      background: var(--border);
+      transform: scale(0.97);
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
     }
 
     .stats {
