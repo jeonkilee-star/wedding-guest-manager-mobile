@@ -624,14 +624,31 @@
     }
 
     async function loadPasswords() {
+      // 먼저 로컬 스토리지에서 로드
+      const saved = localStorage.getItem("wedding-passwords");
+      if (saved) {
+        try {
+          passwords = JSON.parse(saved);
+          return;
+        } catch (e) {}
+      }
+
+      // db에서 로드
       if (db) {
         try {
           const result = await db.collection("wedding/passwords").get();
           passwords = result.docs.map(doc => ({ id: doc.id, ...doc.data }));
+          localStorage.setItem("wedding-passwords", JSON.stringify(passwords));
         } catch (e) {
-          passwords = {};
+          passwords = [];
         }
+      } else {
+        passwords = [];
       }
+    }
+
+    function savePasswordLocal() {
+      localStorage.setItem("wedding-passwords", JSON.stringify(passwords));
     }
 
     function showPasswordScreen() {
@@ -674,15 +691,18 @@
         return;
       }
 
+      // 기존 항목 삭제 후 추가
+      passwords = passwords.filter(p => p.id !== currentSide);
+      passwords.push({ id: currentSide, password: pwd1 });
+
+      savePasswordLocal();
+
       if (db) {
         try {
           await db.collection("wedding/passwords").set(currentSide, { password: pwd1 });
-          passwords.push({ id: currentSide, password: pwd1 });
         } catch (e) {
-          console.error("Password save failed:", e);
+          console.error("DB save failed:", e);
         }
-      } else {
-        passwords.push({ id: currentSide, password: pwd1 });
       }
 
       showPasswordScreen();
