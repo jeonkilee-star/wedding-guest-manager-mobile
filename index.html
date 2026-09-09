@@ -501,7 +501,8 @@
 
         <div class="divider"></div>
 
-        <div class="stats" id="mainStats">
+        <!-- 일반 가족용 통계 -->
+        <div class="stats" id="familyStats">
           <div class="stat" id="totalCountStat" style="cursor: pointer;" onclick="goToDashboardIfAdmin()">
             <div class="stat-label">총 인원</div>
             <div class="stat-value" id="totalCount">0</div>
@@ -517,6 +518,26 @@
           <div class="stat" id="pendingCountStat">
             <div class="stat-label">미응답</div>
             <div class="stat-value" id="pendingCount" style="color: var(--warning);">0</div>
+          </div>
+        </div>
+
+        <!-- 신랑/신부용 통계 -->
+        <div class="stats" id="adminStats" style="display: none;">
+          <div class="stat">
+            <div class="stat-label">총 인원</div>
+            <div class="stat-value" id="adminTotal">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">전체참석</div>
+            <div class="stat-value" id="adminAttended" style="color: var(--success);">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">신랑측</div>
+            <div class="stat-value" id="adminGroom">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">신부측</div>
+            <div class="stat-value" id="adminBride">0</div>
           </div>
         </div>
 
@@ -768,12 +789,14 @@
       loadSubmissions();
       renderStats();
 
-      // 신랑/신부인 경우 "총 인원"만 표시
+      // 신랑/신부인 경우 전용 통계 표시
       const isGroomOrBride = (registeredRole.role === '신랑 (이정민)' || registeredRole.role === '신부 (김예미)');
       if (isGroomOrBride) {
-        document.getElementById('submitCountStat').style.display = 'none';
-        document.getElementById('attendedCountStat').style.display = 'none';
-        document.getElementById('pendingCountStat').style.display = 'none';
+        document.getElementById('familyStats').style.display = 'none';
+        document.getElementById('adminStats').style.display = 'grid';
+      } else {
+        document.getElementById('familyStats').style.display = 'grid';
+        document.getElementById('adminStats').style.display = 'none';
       }
     }
 
@@ -994,6 +1017,26 @@
       document.getElementById('submitCount').textContent = submissions.length;
       document.getElementById('attendedCount').textContent = attended;
       document.getElementById('pendingCount').textContent = pending;
+
+      // 신랑/신부용 통계 계산
+      const groomTotal = submissions
+        .filter(s => {
+          const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+          return subSide === 'groom';
+        })
+        .reduce((sum, s) => sum + s.count, 0);
+
+      const brideTotal = submissions
+        .filter(s => {
+          const subSide = s.userSide || (s.contributor.includes('신랑측') ? 'groom' : 'bride');
+          return subSide === 'bride';
+        })
+        .reduce((sum, s) => sum + s.count, 0);
+
+      document.getElementById('adminTotal').textContent = total;
+      document.getElementById('adminAttended').textContent = attended;
+      document.getElementById('adminGroom').textContent = groomTotal;
+      document.getElementById('adminBride').textContent = brideTotal;
     }
 
     async function deleteSubmission(id) {
