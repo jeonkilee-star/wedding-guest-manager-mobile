@@ -36,7 +36,7 @@
 
 - **총 인원 / 신랑측 / 신부측** — 전체 합계
 - **역할별 현황** — 신랑측·신부측 탭을 눌러 아버지·어머니·형제자매별 인원을 확인
-- **내 제출 내역** — 내가 넣은 기록. 잘못 넣었으면 `삭제`
+- **내 제출 내역** — 이 휴대폰에서 넣은 기록. `수정` 으로 숫자·메모를 고치고, `삭제` 로 지웁니다
 
 다른 가족이 입력하면 **새로고침 없이 바로** 숫자가 올라갑니다.
 
@@ -61,7 +61,8 @@ https://jeonkilee-star.github.io/wedding-guest-manager-mobile/?v=2
 > 매번 비밀번호를 넣는 번거로움을 없애려고 일부러 이렇게 만들었습니다.
 > 링크는 가족에게만 공유해 주세요.
 
-- 메모에 적은 내용은 **같은 역할로 등록한 다른 휴대폰에서도 보입니다.** 민감한 내용은 적지 마세요.
+- **내 제출 내역에는 그 휴대폰에서 넣은 것만** 보입니다. 다른 사람 기록은 수정·삭제할 수 없습니다.
+- 다만 **총 인원과 역할별 현황은 모두에게 공개**됩니다.
 - 삭제한 기록은 **되돌릴 수 없습니다.**
 
 ---
@@ -87,23 +88,32 @@ https://jeonkilee-star.github.io/wedding-guest-manager-mobile/?v=2
   userRole:    "아버지",          // 집계 기준
   count:       4,                // 인원수
   personalNote: "거래처",         // 메모
-  createdAt:   1757400000000     // 입력 시각
+  createdAt:   1757400000000,    // 입력 시각
+  deviceId:    "dev_xxx_yyy"     // 입력한 기기 (내 제출 내역 판별용)
 }
 ```
 
+`deviceId` 가 없는 문서는 기기 ID 도입(2026-09-10) 이전 기록으로,
+`userSide` + `userRole` 이 일치하면 본인 것으로 간주합니다.
+
 ### 보안 규칙
 
-`submissions` 컬렉션만, **2026-10-31까지** 열려 있습니다.
+`submissions` 컬렉션만, **2027-03-31까지** 열려 있습니다.
 
 ```
 match /submissions/{docId} {
-  allow read: if request.time < timestamp.date(2026, 10, 31);
-  allow create, update, delete: if request.time < timestamp.date(2026, 10, 31);
+  allow read: if request.time < timestamp.date(2027, 3, 31);
+  allow create, update, delete: if request.time < timestamp.date(2027, 3, 31);
 }
 ```
 
 > ⚠️ 이 날짜가 지나면 앱이 조용히 "이 기기에만 저장됨" 모드로 바뀝니다.
 > 이후에도 계속 쓰려면 Firebase 콘솔에서 규칙의 날짜를 연장해야 합니다.
+
+### 데이터 백업
+
+`backups/` 폴더에 JSON으로 보관합니다. 하객 이름·메모가 들어가므로
+`.gitignore` 로 제외되어 있어 **공개 저장소에는 올라가지 않습니다.**
 
 ### 연결 상태 확인
 
